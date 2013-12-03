@@ -1,0 +1,107 @@
+# Econversations
+
+A mail to HTML [conversation threading](https://en.wikipedia.org/wiki/Conversation_threading) converter
+
+Dependencies:
+
+* (Dovecot) IMAP server
+* Golang
+* Web interface with Javascript
+
+Maildir -> <http://example.com/inbox/?id=20131203060926.GA13581@sg.webconverger.com>
+
+Shows the start of an example "Movie" conversation.
+
+## Why use Dovecot?
+
+Dovecot actually **threads** or groups emails into conversations.
+
+This saves us from having to code this tricky part ourselves by tracking
+Message-ID: and References: / In-Reply-To:, which can be rather complex.
+
+### Raw dovecot output
+
+	printf "1 select inbox\n2 thread references us-ascii all\n3 fetch 1:* envelope\n4 logout\n" |
+	/usr/lib/dovecot/imap
+
+Produces the reply from Dovecot.
+
+	* PREAUTH [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS SPECIAL-USE BINARY MOVE] Logged in as hendry
+	* FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
+	* OK [PERMANENTFLAGS (\Answered \Flagged \Deleted \Seen \Draft \*)] Flags permitted.
+	* 5 EXISTS
+	* 0 RECENT
+	* OK [UIDVALIDITY 1386050931] UIDs valid
+	* OK [UIDNEXT 6] Predicted next UID
+	* OK [NOMODSEQ] No permanent modsequences
+	1 OK [READ-WRITE] Select completed (0.000 secs).
+	* THREAD (1 2 3 4)(5)
+	* 1 FETCH (ENVELOPE ("Tue, 3 Dec 2013 14:09:26 +0800" "Movie" (("Ruth Hendry" NIL "hendry" "dabase.com")) (("Ruth Hendry" NIL "hendry" "dabase.com")) (("Ruth Hendry" NIL "hendry" "dabase.com")) ((NIL NIL "hendry" "iki.fi")) NIL NIL NIL "<20131203060926.GA13581@sg.webconverger.com>"))
+	* 2 FETCH (ENVELOPE ("Tue, 03 Dec 2013 14:10:02 +0800" "Re: Movie" (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Ruth Hendry" NIL "hendry" "dabase.com")) NIL NIL "<20131203060926.GA13581@sg.webconverger.com>" "<1386051002.5898.54801045.596369BF@webmail.messagingengine.com>"))
+	* 3 FETCH (ENVELOPE ("Tue, 3 Dec 2013 14:11:33 +0800" "Re: Movie" (("Ruth Hendry" NIL "hendry" "dabase.com")) (("Ruth Hendry" NIL "hendry" "dabase.com")) (("Ruth Hendry" NIL "hendry" "dabase.com")) (("Kai Hendry" NIL "hendry" "iki.fi")) NIL NIL "<1386051002.5898.54801045.596369BF@webmail.messagingengine.com>" "<20131203061133.GA13612@sg.webconverger.com>"))
+	* 4 FETCH (ENVELOPE ("Tue, 03 Dec 2013 14:11:52 +0800" "Re: Movie" (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Ruth Hendry" NIL "hendry" "dabase.com")) NIL NIL "<20131203061133.GA13612@sg.webconverger.com>" "<1386051112.6823.54801321.159DC575@webmail.messagingengine.com>"))
+	* 5 FETCH (ENVELOPE ("Tue, 03 Dec 2013 14:12:50 +0800" "Dentist" (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Kai Hendry" NIL "hendry" "iki.fi")) (("Ruth Hendry" NIL "hendry" "dabase.com")) NIL NIL NIL "<1386051170.7090.54801509.5C64E91C@webmail.messagingengine.com>"))
+	2 OK Thread completed.
+	3 OK Fetch completed.
+	* BYE Logging out
+	4 OK Logout completed.
+
+### Dovecot's THREAD
+
+	THREAD (1 2 3 4)(5)
+
+We can see messages 1,2,3,4 are a single conversation about a "Movie".
+
+5 is a separate conversation about a Dentist appointment.
+
+## Mutt's view
+
+	mutt -f Maildir
+
+![mutt threaded view](/imgs/mutt.png)
+
+Mutt conjures a great threaded conversation view as a reference. It's probably
+easier to bunch up threads as [Gmail-like
+conversations](https://support.google.com/mail/answer/5900?hl=en).
+
+## Golang
+
+I'm planning to use Golang to interface with Dovecot IMAP using <http://godoc.org/code.google.com/p/go-imap>
+
+<http://golang.org/pkg/net/mail/> can help parse/sanitise addresses, text
+bodies and convert Dates to Epoch.
+
+Then `json.MarshalIndent` the sanitised email metadata & body into JSON.
+
+	{
+	  "thread": [[1,2,3,4],5],
+	  "1": {
+		"Header": { "Subject": "Movie", "Date": "123123123123" },
+		"Body": "Dear Kai,\n\nMovie tonight?"
+	  },
+	  "2": {
+		"Header": { "Subject": "Re: Movie", "Date": "123123123123" },
+		"Body": "...."
+	  }
+	}
+
+Hoping to statically generate a large JSON file per mailbox. This will be
+compressed on delivery to the Web interface.
+
+# JSON to Web interface
+
+Javascript needs to be written to AJAX the JSON and produce the output. Ideally
+as close to Gmail's old conversation view as possible.
+
+![Desktop expanded](/imgs/desktop-expanded.png)
+![Desktop index](/imgs/desktop-index.png)
+![Mobile expanded](/imgs/mobile-expanded.png)
+![Mobile index](/imgs/mobile-index.png)
+
+Perhaps a NodeJS can be written to statically generate the HTML too.
+
+The **index** & **expanded** views are probably most important.
+
+TODO: URL structure
+
+	?id=20131203060926.GA13581@sg.webconverger.com - focuses on top most "Movie" conversation

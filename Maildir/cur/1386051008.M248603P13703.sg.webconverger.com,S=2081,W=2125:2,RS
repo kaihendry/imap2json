@@ -1,0 +1,44 @@
+Return-Path: <hendry@iki.fi>
+X-Original-To: hendry@dabase.com
+Delivered-To: hendry@dabase.com
+Received: by sg.webconverger.com (Postfix, from userid 115)
+	id 191271B002E; Tue,  3 Dec 2013 14:10:07 +0800 (SGT)
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+	by sg.webconverger.com (Postfix) with ESMTP id 2AC4E1B0017
+	for <hendry@dabase.com>; Tue,  3 Dec 2013 14:10:06 +0800 (SGT)
+Received: from compute3.internal (compute3.nyi.mail.srv.osa [10.202.2.43])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 8722E21681
+	for <hendry@dabase.com>; Tue,  3 Dec 2013 01:10:02 -0500 (EST)
+Received: from web6 ([10.202.2.216])
+  by compute3.internal (MEProxy); Tue, 03 Dec 2013 01:10:02 -0500
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	messagingengine.com; h=message-id:from:to:mime-version
+	:content-transfer-encoding:content-type:subject:date:in-reply-to
+	:references; s=smtpout; bh=2jOxuB6AFs4ZA0znfZ6l/TfQtMQ=; b=bGBtg
+	sraNxIdfeJNyL7hCyqsHv9R56vA+SNCOPRuapGRg5WDzrzI+jji0pnG4m9EfSATu
+	Rok7L8iz30oxwWPcYuETXTubILUUec1jVjzcQGtWN3DDvmB1I9/J6ygu/s08U0So
+	Rgr9g4p9XYRsL4Iz1SQBsaQ5vfJK3lSs5O5caE=
+Received: by web6.nyi.mail.srv.osa (Postfix, from userid 99)
+	id 71CE6282928; Tue,  3 Dec 2013 01:10:02 -0500 (EST)
+Message-Id: <1386051002.5898.54801045.596369BF@webmail.messagingengine.com>
+X-Sasl-Enc: Cn0jCgHOpx+SzO5A+EZ+FfvS+eb5DPluTsvdIB0LejSn 1386051002
+From: Kai Hendry <hendry@iki.fi>
+To: Ruth Hendry <hendry@dabase.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Mailer: MessagingEngine.com Webmail Interface - ajax-24db94df
+Subject: Re: Movie
+Date: Tue, 03 Dec 2013 14:10:02 +0800
+In-Reply-To: <20131203060926.GA13581@sg.webconverger.com>
+References: <20131203060926.GA13581@sg.webconverger.com>
+X-DSPAM-Result: Innocent
+X-DSPAM-Processed: Tue Dec  3 14:10:07 2013
+X-DSPAM-Confidence: 0.9906
+X-DSPAM-Probability: 0.0000
+X-DSPAM-Signature: 529d75bf136891982511755
+
+On Tue, Dec 3, 2013, at 02:09 PM, Ruth Hendry wrote:
+> Movie tonight?
+
+Sure, how about http://www.imdb.com/title/tt1951264/ ?
