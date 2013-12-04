@@ -14,7 +14,7 @@ Ruth and Kai have an email exchange arranging a movie. A friend Jamie wants to
 catch up on the conversation and perhaps join. Kai emails Jamie the link to the
 start of the conversation.
 
-The link is renders the email archive produced by "Econversations" of the
+The URL points to the Web email archive produced by "Econversations" of the
 entire conversation. Now Jamie knows all the details, in a familiar Web view
 (Gmail style) of the email exchange. There is no need for Kai or Ruth to use
 the clumsy "Forward All" mechanism on their email client.
@@ -28,13 +28,18 @@ This would generate a:
 * mail.json
 * index.{html,css,js} to view that mail.json
 
+**imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [[Maildir/]]
+
 ## Why use Dovecot?
 
-Dovecot actually [threads](http://tools.ietf.org/html/rfc5256) or [groups
-emails into conversations](https://support.google.com/mail/answer/5900?hl=en).
+Dovecot implements [rfc5256 threading](http://tools.ietf.org/html/rfc5256)
+which can be used to [group emails into conversations like Gmail
+does](https://support.google.com/mail/answer/5900?hl=en).
 
 This saves us from having to code this tricky part ourselves by tracking
 Message-ID: and References: / In-Reply-To:, which can be rather complex.
+
+IMAP also gives us a uniform interface at a URL, e.g. `imap://anonymous@imap.dabase.com`
 
 ### Raw dovecot output
 
@@ -65,7 +70,7 @@ Produces the reply from Dovecot.
 	* BYE Logging out
 	4 OK Logout completed.
 
-Or using netcat:
+Or using netcat with [our read only test IMAP service](http://dabase.com/e/16001/):
 
 	nc imap.dabase.com imap << EOF
 	1 authenticate anonymous
@@ -88,6 +93,8 @@ We can see messages 1,2,3,4 are a single conversation about a "Movie".
 5 is a separate conversation about a Dentist appointment.
 
 ## Mutt's view
+
+Mutt is an excellent [MUA](https://en.wikipedia.org/wiki/Email_client) and reference point.
 
 	mutt -f Maildir
 
@@ -147,8 +154,8 @@ compressed on delivery to the Web interface.
 
 # JSON to Web interface
 
-Javascript needs to be written to AJAX the JSON and produce the output. Ideally
-as close to Gmail's conversation view as possible.
+Javascript needs to be written to AJAX the JSON and produce the output.
+Initially as close to Gmail's or Fastmail's conversation view as possible.
 
 ![Desktop expanded](/imgs/desktop-expanded.png)
 ![Desktop index](/imgs/desktop-index.png)
