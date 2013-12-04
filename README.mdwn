@@ -30,6 +30,8 @@ This would generate a:
 
 **imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [an example Maildir](Maildir/).
 
+Why? Mailman, Hypermail & Mhonarc produced mail archives SUCK
+
 ## Why use Dovecot?
 
 Dovecot implements [rfc5256 threading](http://tools.ietf.org/html/rfc5256)
@@ -167,9 +169,13 @@ Javascript is required, making it Web crawler friendly.
 
 The **index** & **expanded** views are probably most important.
 
-TODO: URL structure
+## Conversation URL structure
 
 	?id=20131203060926.GA13581@sg.webconverger.com - focuses on top most "Movie" conversation
 
 Ideally each conversation has a unique id or directory structure so it can
 shared and protected by an easy to implement `.htaccess` or nginx rule.
+
+Gmail uses 16 character alphanumeric string as a conversation id, e.g. <https://mail.google.com/mail/u/0/#inbox/1424243f629686c1>
+
+Fastmail uses two 16 character alphanumeric strings with a dash in between, e.g. <https://www.fastmail.fm/mail/Inbox/9c6425401f4d8623-f65945357u119269>
