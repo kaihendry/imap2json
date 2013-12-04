@@ -28,7 +28,7 @@ This would generate a:
 * mail.json
 * index.{html,css,js} to view that mail.json
 
-**imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [[Maildir/]]
+**imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [an example Maildir](Maildir/).
 
 ## Why use Dovecot?
 
@@ -39,7 +39,8 @@ does](https://support.google.com/mail/answer/5900?hl=en).
 This saves us from having to code this tricky part ourselves by tracking
 Message-ID: and References: / In-Reply-To:, which can be rather complex.
 
-IMAP also gives us a uniform interface at a URL, e.g. `imap://anonymous@imap.dabase.com`
+IMAP also gives us a uniform interface at a URL, e.g.
+`imap://anonymous@imap.dabase.com` to generate an archive from.
 
 ### Raw dovecot output
 
@@ -100,9 +101,8 @@ Mutt is an excellent [MUA](https://en.wikipedia.org/wiki/Email_client) and refer
 
 ![mutt threaded view](/imgs/mutt.png)
 
-Mutt conjures a great threaded conversation view as a reference. For the Web
-it's probably easier to bunch up threads as [Gmail-like
-conversations](https://support.google.com/mail/answer/5900?hl=en), however it is interesting to see exactly who reply to who.
+Mutt conjures a great threaded conversation view as a reference indepedent of
+Dovecot's THREAD rfc5256 support.
 
 ### Using mutt to debug IMAP commands
 
