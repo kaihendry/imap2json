@@ -103,8 +103,9 @@ Mutt is an excellent [MUA](https://en.wikipedia.org/wiki/Email_client) and refer
 
 ![mutt threaded view](/imgs/mutt.png)
 
-Mutt conjures a great threaded conversation view as a reference indepedent of
-Dovecot's THREAD rfc5256 support.
+Mutt conjures a great threaded conversation view as a reference independent of
+Dovecot's THREAD rfc5256 support. So it would be interesting to eventually
+compare the threading structure.
 
 ### Using mutt to debug IMAP commands
 
