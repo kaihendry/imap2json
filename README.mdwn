@@ -4,22 +4,41 @@ A mail to HTML [conversation threading](https://en.wikipedia.org/wiki/Conversati
 
 Dependencies:
 
-* (Dovecot) IMAP server
-* Golang
-* Web interface with Javascript
+* (Dovecot) IMAP server for <http://tools.ietf.org/html/rfc5256>
+* Golang for sanitising and serialising IMAP response to JSON
+* Web interface with Javascript to render the JSON
 
-Maildir -> <http://example.com/inbox/?id=20131203060926.GA13581@sg.webconverger.com>
+Example use case:
 
-Shows the start of an example "Movie" conversation.
+Ruth and Kai have an email exchange arranging a movie. A friend Jamie wants to
+catch up on the conversation and perhaps join. Kai emails Jamie the link to the
+start of the conversation.
+
+The link is renders the email archive produced by "Econversations" of the
+entire conversation. Now Jamie knows all the details, in a familiar Web view
+(Gmail style) of the email exchange. There is no need for Kai or Ruth to use
+the clumsy "Forward All" mechanism on their email client.
+
+Example usage:
+
+	/srv/www/archive.dabase.com$ econversations imap://anonymous@imap.dabase.com
+
+This would generate a:
+
+* mail.json
+* index.{html,css,js} to view that mail.json
 
 ## Why use Dovecot?
 
-Dovecot actually **threads** or groups emails into conversations.
+Dovecot actually [threads](http://tools.ietf.org/html/rfc5256) or [groups
+emails into conversations](https://support.google.com/mail/answer/5900?hl=en).
 
 This saves us from having to code this tricky part ourselves by tracking
 Message-ID: and References: / In-Reply-To:, which can be rather complex.
 
 ### Raw dovecot output
+
+On a local dovecot instance using Maildir/
 
 	printf "1 select inbox\n2 thread references us-ascii all\n3 fetch 1:* envelope\n4 logout\n" |
 	/usr/lib/dovecot/imap
@@ -46,8 +65,22 @@ Produces the reply from Dovecot.
 	* BYE Logging out
 	4 OK Logout completed.
 
-### Dovecot's THREAD
+Or using netcat:
 
+	nc imap.dabase.com imap << EOF
+	1 authenticate anonymous
+
+	2 select inbox
+	3 thread references UTF-8 all
+	4 fetch 1:* envelope
+	5 logout
+	EOF
+
+The carriage return after "1 authenticate anonymous" is required.
+
+### Dovecot's THREAD [rfc5256](http://tools.ietf.org/html/rfc5256)
+
+	3 thread references UTF-8 all
 	THREAD (1 2 3 4)(5)
 
 We can see messages 1,2,3,4 are a single conversation about a "Movie".
@@ -60,13 +93,37 @@ We can see messages 1,2,3,4 are a single conversation about a "Movie".
 
 ![mutt threaded view](/imgs/mutt.png)
 
-Mutt conjures a great threaded conversation view as a reference. It's probably
-easier to bunch up threads as [Gmail-like
-conversations](https://support.google.com/mail/answer/5900?hl=en).
+Mutt conjures a great threaded conversation view as a reference. For the Web
+it's probably easier to bunch up threads as [Gmail-like
+conversations](https://support.google.com/mail/answer/5900?hl=en), however it is interesting to see exactly who reply to who.
+
+### Using mutt to debug IMAP commands
+
+mutt needs to be compiled with `--enable-debug`.
+
+	$ mutt -v | grep -i debug
+	Configure options: '--prefix=/usr' '--sysconfdir=/etc' '--enable-imap' '--enable-debug' '--enable-smtp' '--enable-hcache' '--with-curses=/usr' '--with-regex' '--with-gss=/usr' '--with-ssl=/usr' '--with-sasl' '--with-idn' 'CFLAGS=-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2' 'LDFLAGS=-Wl,-O1,--sort-common,--as-needed,-z,relro,--hash-style=gnu'
+	+DEBUG
+
+We need a mutt configuration for testing:
+
+	$ cat mutt-econv-test
+	set spoolfile=imap://anonymous@imap.dabase.com
+	set folder=imap://anonymous@imap.dabase.com
+	set sort=threads
+	set sort_aux=reverse-last-date-received
+
+Now run mutt in debug mode with the above configuration:
+
+	mutt -d2 -F mutt-econv-test
+
+Look at `.muttdebug0` for a complete log
+
+	grep '4>' .muttdebug0 # show the IMAP commands issued by mutt
 
 ## Golang
 
-I'm planning to use Golang to interface with Dovecot IMAP using <http://godoc.org/code.google.com/p/go-imap>
+Going to use Golang to interface with Dovecot IMAP using <http://godoc.org/code.google.com/p/go-imap>
 
 <http://golang.org/pkg/net/mail/> can help parse/sanitise addresses, text
 bodies and convert Dates to Epoch.
@@ -91,7 +148,7 @@ compressed on delivery to the Web interface.
 # JSON to Web interface
 
 Javascript needs to be written to AJAX the JSON and produce the output. Ideally
-as close to Gmail's old conversation view as possible.
+as close to Gmail's conversation view as possible.
 
 ![Desktop expanded](/imgs/desktop-expanded.png)
 ![Desktop index](/imgs/desktop-index.png)
