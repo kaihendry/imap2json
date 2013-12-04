@@ -44,7 +44,7 @@ IMAP also gives us a uniform interface at a URL, e.g.
 
 ### Raw dovecot output
 
-On a local dovecot instance using Maildir/
+On a local [dovecot](https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/dovecot) instance using [Maildir](Maildir/) and [minimal Dovecot configuration](dovecot.conf):
 
 	printf "1 select inbox\n2 thread references us-ascii all\n3 fetch 1:* envelope\n4 logout\n" |
 	/usr/lib/dovecot/imap
@@ -157,15 +157,19 @@ compressed on delivery to the Web interface.
 Javascript needs to be written to AJAX the JSON and produce the output.
 Initially as close to Gmail's or Fastmail's conversation view as possible.
 
-![Desktop expanded](/imgs/desktop-expanded.png)
 ![Desktop index](/imgs/desktop-index.png)
-![Mobile expanded](/imgs/mobile-expanded.png)
+![Desktop expanded](/imgs/desktop-expanded.png)
 ![Mobile index](/imgs/mobile-index.png)
+![Mobile expanded](/imgs/mobile-expanded.png)
 
-Perhaps a NodeJS can be written to statically generate the HTML too.
+Perhaps a NodeJS can be written to statically generate the HTML too, so no
+Javascript is required, making it Web crawler friendly.
 
 The **index** & **expanded** views are probably most important.
 
 TODO: URL structure
 
 	?id=20131203060926.GA13581@sg.webconverger.com - focuses on top most "Movie" conversation
+
+Ideally each conversation has a unique id or directory structure so it can
+shared and protected by an easy to implement `.htaccess` or nginx rule.
