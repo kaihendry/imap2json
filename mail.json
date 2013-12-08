@@ -1,0 +1,302 @@
+{
+ "1": {
+  "Header": {
+   "Content-Disposition": [
+    "inline"
+   ],
+   "Content-Type": [
+    "text/plain; charset=utf-8"
+   ],
+   "Date": [
+    "Tue, 3 Dec 2013 14:09:26 +0800"
+   ],
+   "From": [
+    "Ruth Hendry \u003chendry@dabase.com\u003e"
+   ],
+   "Message-Id": [
+    "\u003c20131203060926.GA13581@sg.webconverger.com\u003e"
+   ],
+   "Mime-Version": [
+    "1.0"
+   ],
+   "Subject": [
+    "Movie"
+   ],
+   "To": [
+    "hendry@iki.fi"
+   ],
+   "User-Agent": [
+    "Mutt/1.5.22 (2013-10-16)"
+   ]
+  },
+  "Body": "Dear Kai,\r\n\r\nMovie tonight?\r\n"
+ },
+ "2": {
+  "Header": {
+   "Content-Transfer-Encoding": [
+    "7bit"
+   ],
+   "Content-Type": [
+    "text/plain"
+   ],
+   "Date": [
+    "Tue, 03 Dec 2013 14:10:02 +0800"
+   ],
+   "Delivered-To": [
+    "hendry@dabase.com"
+   ],
+   "Dkim-Signature": [
+    "v=1; a=rsa-sha1; c=relaxed/relaxed; d= messagingengine.com; h=message-id:from:to:mime-version :content-transfer-encoding:content-type:subject:date:in-reply-to :references; s=smtpout; bh=2jOxuB6AFs4ZA0znfZ6l/TfQtMQ=; b=bGBtg sraNxIdfeJNyL7hCyqsHv9R56vA+SNCOPRuapGRg5WDzrzI+jji0pnG4m9EfSATu Rok7L8iz30oxwWPcYuETXTubILUUec1jVjzcQGtWN3DDvmB1I9/J6ygu/s08U0So Rgr9g4p9XYRsL4Iz1SQBsaQ5vfJK3lSs5O5caE="
+   ],
+   "From": [
+    "Kai Hendry \u003chendry@iki.fi\u003e"
+   ],
+   "In-Reply-To": [
+    "\u003c20131203060926.GA13581@sg.webconverger.com\u003e"
+   ],
+   "Message-Id": [
+    "\u003c1386051002.5898.54801045.596369BF@webmail.messagingengine.com\u003e"
+   ],
+   "Mime-Version": [
+    "1.0"
+   ],
+   "Received": [
+    "by sg.webconverger.com (Postfix, from userid 115) id 191271B002E; Tue,  3 Dec 2013 14:10:07 +0800 (SGT)",
+    "from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25]) by sg.webconverger.com (Postfix) with ESMTP id 2AC4E1B0017 for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 14:10:06 +0800 (SGT)",
+    "from compute3.internal (compute3.nyi.mail.srv.osa [10.202.2.43]) by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 8722E21681 for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 01:10:02 -0500 (EST)",
+    "from web6 ([10.202.2.216]) by compute3.internal (MEProxy); Tue, 03 Dec 2013 01:10:02 -0500",
+    "by web6.nyi.mail.srv.osa (Postfix, from userid 99) id 71CE6282928; Tue,  3 Dec 2013 01:10:02 -0500 (EST)"
+   ],
+   "References": [
+    "\u003c20131203060926.GA13581@sg.webconverger.com\u003e"
+   ],
+   "Return-Path": [
+    "\u003chendry@iki.fi\u003e"
+   ],
+   "Subject": [
+    "Re: Movie"
+   ],
+   "To": [
+    "Ruth Hendry \u003chendry@dabase.com\u003e"
+   ],
+   "X-Dspam-Confidence": [
+    "0.9906"
+   ],
+   "X-Dspam-Probability": [
+    "0.0000"
+   ],
+   "X-Dspam-Processed": [
+    "Tue Dec  3 14:10:07 2013"
+   ],
+   "X-Dspam-Result": [
+    "Innocent"
+   ],
+   "X-Dspam-Signature": [
+    "529d75bf136891982511755"
+   ],
+   "X-Mailer": [
+    "MessagingEngine.com Webmail Interface - ajax-24db94df"
+   ],
+   "X-Original-To": [
+    "hendry@dabase.com"
+   ],
+   "X-Sasl-Enc": [
+    "Cn0jCgHOpx+SzO5A+EZ+FfvS+eb5DPluTsvdIB0LejSn 1386051002"
+   ]
+  },
+  "Body": "On Tue, Dec 3, 2013, at 02:09 PM, Ruth Hendry wrote:\r\n\u003e Movie tonight?\r\n\r\nSure, how about http://www.imdb.com/title/tt1951264/ ?\r\n"
+ },
+ "3": {
+  "Header": {
+   "Content-Disposition": [
+    "inline"
+   ],
+   "Content-Type": [
+    "text/plain; charset=utf-8"
+   ],
+   "Date": [
+    "Tue, 3 Dec 2013 14:11:33 +0800"
+   ],
+   "From": [
+    "Ruth Hendry \u003chendry@dabase.com\u003e"
+   ],
+   "In-Reply-To": [
+    "\u003c1386051002.5898.54801045.596369BF@webmail.messagingengine.com\u003e"
+   ],
+   "Message-Id": [
+    "\u003c20131203061133.GA13612@sg.webconverger.com\u003e"
+   ],
+   "Mime-Version": [
+    "1.0"
+   ],
+   "References": [
+    "\u003c20131203060926.GA13581@sg.webconverger.com\u003e \u003c1386051002.5898.54801045.596369BF@webmail.messagingengine.com\u003e"
+   ],
+   "Subject": [
+    "Re: Movie"
+   ],
+   "To": [
+    "Kai Hendry \u003chendry@iki.fi\u003e"
+   ],
+   "User-Agent": [
+    "Mutt/1.5.22 (2013-10-16)"
+   ]
+  },
+  "Body": "On Tue, Dec 03, 2013 at 02:10:02PM +0800, Kai Hendry wrote:\r\n\u003e Sure, how about http://www.imdb.com/title/tt1951264/ ?\r\n\r\nBooked 20:30 show! See you at 19:30 at the Duck Rice place for dinner.\r\n"
+ },
+ "4": {
+  "Header": {
+   "Content-Transfer-Encoding": [
+    "7bit"
+   ],
+   "Content-Type": [
+    "text/plain"
+   ],
+   "Date": [
+    "Tue, 03 Dec 2013 14:11:52 +0800"
+   ],
+   "Delivered-To": [
+    "hendry@dabase.com"
+   ],
+   "Dkim-Signature": [
+    "v=1; a=rsa-sha1; c=relaxed/relaxed; d= messagingengine.com; h=message-id:from:to:mime-version :content-transfer-encoding:content-type:subject:date:in-reply-to :references; s=smtpout; bh=9vPWGq/iFpjUKC12z2pXOjycj0c=; b=YMPxs vZKORloMMGyzycz87UKY0kuAkwjqalkMG9CHrWRCJaFc4BMxhov1C5eFmJqCV+lg vt+rp/UFBqi6SIKyPh9qokAnSBWE+xCYYL298VwDacVQRXy1aGJu5ZwPbAHZ2/S6 B9vuEaqp75LAXGMLhBWt0tX4jPmSLeWP4dg/7U="
+   ],
+   "From": [
+    "Kai Hendry \u003chendry@iki.fi\u003e"
+   ],
+   "In-Reply-To": [
+    "\u003c20131203061133.GA13612@sg.webconverger.com\u003e"
+   ],
+   "Message-Id": [
+    "\u003c1386051112.6823.54801321.159DC575@webmail.messagingengine.com\u003e"
+   ],
+   "Mime-Version": [
+    "1.0"
+   ],
+   "Received": [
+    "by sg.webconverger.com (Postfix, from userid 115) id AE9311B002E; Tue,  3 Dec 2013 14:11:58 +0800 (SGT)",
+    "from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25]) by sg.webconverger.com (Postfix) with ESMTP id A175D1B0017 for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 14:11:56 +0800 (SGT)",
+    "from compute5.internal (compute5.nyi.mail.srv.osa [10.202.2.45]) by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 485CB2159B for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 01:11:52 -0500 (EST)",
+    "from web6 ([10.202.2.216]) by compute5.internal (MEProxy); Tue, 03 Dec 2013 01:11:53 -0500",
+    "by web6.nyi.mail.srv.osa (Postfix, from userid 99) id 9434B282968; Tue,  3 Dec 2013 01:11:52 -0500 (EST)"
+   ],
+   "References": [
+    "\u003c20131203060926.GA13581@sg.webconverger.com\u003e \u003c1386051002.5898.54801045.596369BF@webmail.messagingengine.com\u003e \u003c20131203061133.GA13612@sg.webconverger.com\u003e"
+   ],
+   "Return-Path": [
+    "\u003chendry@iki.fi\u003e"
+   ],
+   "Subject": [
+    "Re: Movie"
+   ],
+   "To": [
+    "Ruth Hendry \u003chendry@dabase.com\u003e"
+   ],
+   "X-Dspam-Confidence": [
+    "0.9901"
+   ],
+   "X-Dspam-Probability": [
+    "0.0000"
+   ],
+   "X-Dspam-Processed": [
+    "Tue Dec  3 14:11:58 2013"
+   ],
+   "X-Dspam-Result": [
+    "Whitelisted"
+   ],
+   "X-Dspam-Signature": [
+    "529d762e137212035212618"
+   ],
+   "X-Mailer": [
+    "MessagingEngine.com Webmail Interface - ajax-24db94df"
+   ],
+   "X-Original-To": [
+    "hendry@dabase.com"
+   ],
+   "X-Sasl-Enc": [
+    "d8Arg3UmSRHTCccLyyskH4syL1tC+TUydOscHXwJL+yR 1386051112"
+   ]
+  },
+  "Body": "See you there!\r\n"
+ },
+ "5": {
+  "Header": {
+   "Content-Transfer-Encoding": [
+    "7bit"
+   ],
+   "Content-Type": [
+    "text/plain"
+   ],
+   "Date": [
+    "Tue, 03 Dec 2013 14:12:50 +0800"
+   ],
+   "Delivered-To": [
+    "hendry@dabase.com"
+   ],
+   "Dkim-Signature": [
+    "v=1; a=rsa-sha1; c=relaxed/relaxed; d= messagingengine.com; h=message-id:from:to:mime-version :content-transfer-encoding:content-type:subject:date; s=smtpout; bh=H4ReGRk39v2VIY3Xg8Cx3CpF55A=; b=mZ6EDur6DrOlBE/bLXFljEHToWHi LIt7c2Di43j53IrsRrpn+pwISYx+lcAHzGbAi4xqUhvSAKumWtqXTu30m/CVRt9b QKOsR/5wuEr3l9iDgxgcNjQqtLgZm+Dsae3jiPeRJrdO1R1BJFOjkZv3KKInoF0h vKPCEsrOBbciWGE="
+   ],
+   "From": [
+    "Kai Hendry \u003chendry@iki.fi\u003e"
+   ],
+   "Message-Id": [
+    "\u003c1386051170.7090.54801509.5C64E91C@webmail.messagingengine.com\u003e"
+   ],
+   "Mime-Version": [
+    "1.0"
+   ],
+   "Received": [
+    "by sg.webconverger.com (Postfix, from userid 115) id 4464F1B002E; Tue,  3 Dec 2013 14:12:52 +0800 (SGT)",
+    "from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25]) by sg.webconverger.com (Postfix) with ESMTP id CC2F31B0017 for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 14:12:51 +0800 (SGT)",
+    "from compute5.internal (compute5.nyi.mail.srv.osa [10.202.2.45]) by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id ED73E20FE2 for \u003chendry@dabase.com\u003e; Tue,  3 Dec 2013 01:12:50 -0500 (EST)",
+    "from web6 ([10.202.2.216]) by compute5.internal (MEProxy); Tue, 03 Dec 2013 01:12:50 -0500",
+    "by web6.nyi.mail.srv.osa (Postfix, from userid 99) id D0DA928296D; Tue,  3 Dec 2013 01:12:50 -0500 (EST)"
+   ],
+   "Return-Path": [
+    "\u003chendry@iki.fi\u003e"
+   ],
+   "Subject": [
+    "Dentist"
+   ],
+   "To": [
+    "Ruth Hendry \u003chendry@dabase.com\u003e"
+   ],
+   "X-Dspam-Confidence": [
+    "0.9899"
+   ],
+   "X-Dspam-Probability": [
+    "0.0000"
+   ],
+   "X-Dspam-Processed": [
+    "Tue Dec  3 14:12:52 2013"
+   ],
+   "X-Dspam-Result": [
+    "Whitelisted"
+   ],
+   "X-Dspam-Signature": [
+    "529d7664137572904728748"
+   ],
+   "X-Mailer": [
+    "MessagingEngine.com Webmail Interface - ajax-24db94df"
+   ],
+   "X-Original-To": [
+    "hendry@dabase.com"
+   ],
+   "X-Sasl-Enc": [
+    "+8Xd4WkD/4BOxNEsMNrhu0NFYJYKtHQUKWq+rHwHxIgw 1386051170"
+   ]
+  },
+  "Body": "Don't forget dentist appointment on Saturday morning at 10:30!\r\n"
+ },
+ "THREAD": [
+  [
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5
+  ]
+ ]
+}
