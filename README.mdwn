@@ -34,9 +34,9 @@ Example usage:
 
 This will generate mail.json from our test repo imap://imap.dabase.com
 
-For a simple Web interface to mail.json see [[html]].
-
 **imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [an example Maildir](Maildir/).
+
+For a simple Web interface (json2html) for mail.json see [serve our html directory from your Webserver](html).
 
 Why? Mailman, Hypermail & Mhonarc produced mail archives SUCK
 
