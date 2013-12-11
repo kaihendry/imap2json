@@ -1,4 +1,4 @@
-Tips for looking an IMAP commands sent over the wire.
+Tips for looking at IMAP commands sent over the wire.
 
 ## Dovecot server configuration
 
