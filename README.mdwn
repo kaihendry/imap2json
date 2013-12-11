@@ -26,12 +26,15 @@ use the clumsy "Forward all" mechanism on their email client.
 
 Example usage:
 
-	/srv/www/archive.dabase.com$ imap2json imap://anonymous@imap.dabase.com
+1. hg clone https://code.google.com/p/go-imap/
+*  cd go-imap
+*  patch -p1 < ../go-imap.diff # To add THREAD support & Anonymous login
+*  cd ..
+*  go run imap2json.go # imap URL argument will be supported in future
 
-This would generate a:
+This will generate mail.json from our test repo imap://imap.dabase.com
 
-* [mail.json](mail.json)
-* OPTIONAL index.{html,css,js} to view that mail.json in a Web browser
+For a simple Web interface to mail.json see [[html]].
 
 **imap.dabase.com** is a [documented working read only IMAP server](http://dabase.com/e/16001/), serving [an example Maildir](Maildir/).
 

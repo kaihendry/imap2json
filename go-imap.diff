@@ -1,0 +1,37 @@
+diff -r bf4993d7df21 go1/imap/command.go
+--- a/go1/imap/command.go	Wed Dec 04 07:54:09 2013 -0500
++++ b/go1/imap/command.go	Wed Dec 11 10:04:22 2013 +0800
+@@ -363,5 +363,8 @@
+ 
+ 		// RFC 5161
+ 		"ENABLE": &CommandConfig{States: all, Filter: LabelFilter("ENABLED")},
++
++		// RFC 5256
++		"THREAD": &CommandConfig{States: all, Filter: NameFilter},
+ 	}
+ }
+diff -r bf4993d7df21 go1/imap/imap.go
+--- a/go1/imap/imap.go	Wed Dec 04 07:54:09 2013 -0500
++++ b/go1/imap/imap.go	Wed Dec 11 10:04:22 2013 +0800
+@@ -194,6 +194,21 @@
+ 	return
+ }
+ 
++func (c *Client) Anonymous() (cmd *Command, err error) {
++	cmd, err = Wait(c.Send("AUTHENTICATE", "anonymous", "foo"))
++	if err == nil {
++		c.setState(Auth)
++		if cmd.result.Label != "CAPABILITY" {
++			// Gmail servers send an untagged CAPABILITY response after
++			// successful authentication. RFC 3501 states that the CAPABILITY
++			// response code in command completion should be used instead, so we
++			// ignore the untagged response.
++			_, err = c.Capability()
++		}
++	}
++	return
++}
++
+ // Login performs plaintext username/password authentication. This command is
+ // disabled when the server advertises LOGINDISABLED capability. The client
+ // automatically requests new capabilities if authentication is successful.
