@@ -1,0 +1,64 @@
+Tips for looking an IMAP commands sent over the wire.
+
+## Dovecot server configuration
+
+Enable <http://wiki2.dovecot.org/Debugging/Rawlog>
+
+	# 2.2.9: /etc/dovecot/dovecot.conf
+	# OS: Linux 3.12.3-1-ARCH x86_64 Arch Linux 
+	log_path = /var/log/dovecot.log
+	mail_debug = yes
+	passdb {
+	  driver = pam
+	}
+	service imap {
+	  executable = imap postlogin
+	}
+	service postlogin {
+	  executable = script-login -d rawlog
+	  unix_listener postlogin {
+	  }
+	}
+	ssl = no
+	userdb {
+	  driver = passwd
+	}
+
+Rawlogs should appear in:
+
+	ls $(sudo grep -oP '(?<=home=).+' /var/log/dovecot.log|tail -n1)/dovecot.rawlog 
+
+## Offlineimap client
+
+	x220:~/dovecot.rawlog$ cat 20131211-111930-30795.in
+	HDAE5 CAPABILITY
+	HDAE6 LIST "" ""
+	HDAE7 LIST "" "*"
+	HDAE8 SELECT INBOX
+	HDAE9 EXAMINE INBOX
+	HDAE10 FETCH 1:* (FLAGS UID)
+	HDAE11 UID FETCH 1 (BODY.PEEK[])
+	HDAE12 UID FETCH 2 (BODY.PEEK[])
+	HDAE13 UID FETCH 3 (BODY.PEEK[])
+	HDAE14 UID FETCH 4 (BODY.PEEK[])
+	HDAE15 UID FETCH 5 (BODY.PEEK[])
+	HDAE16 LOGOUT
+
+## Mutt tag and export
+
+Select all message and save to mailbox
+
+	T . ; s
+
+Save tagged to mailbox ('?' for list): /tmp/foobar
+
+	a0001 CAPABILITY
+	a0002 LIST "" ""
+	a0003 STATUS "Drafts" (MESSAGES)
+	a0004 SELECT "INBOX"
+	a0005 FETCH 1:5 (UID FLAGS INTERNALDATE RFC822.SIZE BODY.PEEK[HEADER.FIELDS (DATE FROM SUBJECT TO CC MESSAGE-ID REFERENCES CONTENT-TYPE CONTENT-DESCRIPTION IN-REPLY-TO REPLY-TO LINES LIST-POST X-LABEL)])
+	a0006 UID FETCH 5 BODY.PEEK[]
+	a0007 UID FETCH 1 BODY.PEEK[]
+	a0008 UID FETCH 2 BODY.PEEK[]
+	a0009 UID FETCH 3 BODY.PEEK[]
+	a0010 UID FETCH 4 BODY.PEEK[]
