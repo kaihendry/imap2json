@@ -4,14 +4,14 @@ License: MIT
 
 Acknowledgements: Maxim Khitrov
 
-imap2json is an email mailbox to HTML [conversation
-threading](https://en.wikipedia.org/wiki/Conversation_threading) tool
+imap2json helps converts an email mailbox to a HTML [conversation
+view](https://en.wikipedia.org/wiki/Conversation_threading).
 
 Dependencies:
 
 * (Dovecot) IMAP server for <http://tools.ietf.org/html/rfc5256>
 * [Golang](http://golang.org/) for sanitising and serialising IMAP response to JSON
-* Web interface using Ember.JS to render the JSON, between familiar index and expanded conversation views
+* Web interface to render the JSON, between familiar index and expanded conversation views
 
 Example use case:
 
@@ -21,8 +21,9 @@ start of the conversation.
 
 The URL points to the Web email archive produced **imap2json** of the entire
 conversation. Now Jamie knows all the details, in a familiar Web conversation
-view (Gmail style) of the email exchange. There is no need for Kai or Ruth to
-use the clumsy "Forward all" mechanism on their email client.
+view, that is mails of the same topic are grouped together, of the email
+exchange. There is no need for Kai or Ruth to use the clumsy "Forward all"
+mechanism on their email client.
 
 Example usage:
 
@@ -171,13 +172,19 @@ The **index** & **expanded** views are probably most important.
 
 ## Conversation URL structure
 
-	?id=20131203060926.GA13581@sg.webconverger.com - focuses on top most "Movie" conversation
-
-Ideally each conversation has a unique id or directory structure so it can
-shared and protected by an easy to implement `.htaccess` or nginx rule.
-
 Gmail uses 16 character alphanumeric string as a conversation id, e.g. <https://mail.google.com/mail/u/0/#inbox/1424243f629686c1>
 
-Fastmail uses two 16 character alphanumeric strings with a dash in between, e.g. <https://www.fastmail.fm/mail/Inbox/9c6425401f4d8623-f65945357u119269>
+Fastmail uses two 16 character alphanumeric strings with a dash in between, e.g. <https://www.fastmail.fm/mail/Inbox/5cf2a643c23b82dc-f65945369u632?u=148c411e>
 
-For getting started in order example we could use 0 -> [1, 2, 3, 4] & 1 -> [5]
+The sha1sum of the first message (\r\n line endings) of a conversation could be
+used as the id of the conversation.
+
+	$ unix2dos 'Maildir/cur/1386050966.M540929P13587.sg.webconverger.com,S=315,W=328:2,S'
+	unix2dos: converting file Maildir/cur/1386050966.M540929P13587.sg.webconverger.com,S=315,W=328:2,S to DOS format ...
+	$ sha1sum 'Maildir/cur/1386050966.M540929P13587.sg.webconverger.com,S=315,W=328:2,S'
+	5048d370149a7a5d25dc17869cb1404cf747b6bb  Maildir/cur/1386050966.M540929P13587.sg.webconverger.com,S=315,W=328:2,S
+
+So the "movie" conversation would be identified by `5048d370149a7a5d25dc17869cb1404cf747b6bb`
+
+<http://example.com/inbox/5048d370149a7a5d25dc17869cb1404cf747b6bb> or rather
+some short, easily sharable version like: <http://example.com/inbox/5048>

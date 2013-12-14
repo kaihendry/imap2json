@@ -1,0 +1,45 @@
+# mail.json design
+
+<http://stackoverflow.com/questions/20513041/json-design-best-practices>
+
+Initially we started with a key based design, so that mail UIDs can be easily
+looked up, and with a special THREAD entry which described the thread structure
+of the UIDs. For example: <https://github.com/kaihendry/imap2json/blob/cf0d6ff6795aca6245edfb86294507d7e621fba8/mail.json>
+
+Pros:
+
+* Individual emails are quick to look up
+* THREAD is exposed, so comparing that THREAD data structure with subsequent fetches should make it bandwidth efficient to keep mail.json current
+
+Cons:
+
+* Thread has to be built from THREAD array description
+* Missing hash identifier of the thread, could be put in, but how?
+* Since not an array structure, it can't be mapped easily to a handlebars template
+
+# Array based structure
+
+The id is bashed on the sha1sum of the first message in the conversation:
+
+	{
+	[ id: 3ae0abbf831db579a23212457dbfac8afd95e2d8,
+	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
+	],
+	[ id: c7e7d24d6c944d3e518a44eacc3bbea8a1b78ffe,
+	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
+	],
+	[ id: 84dd030a09654a4d187a4bb9396725b0b601cd67,
+	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
+	],
+
+Pros:
+
+* Trivial to render
+* Has each conversation uniquely identified
+
+Cons:
+
+* Is it easy to expand / lookup a short sha1sum, e.g. '3ae0' to '3ae0abbf831db579a23212457dbfac8afd95e2d8'?
+* We are not storing THREAD which is needed to easily know what we have already
+* This structure doesn't consider the subtle nesting in the thread, it just groups the conversation, losing that information
+* Seems more of a display format
