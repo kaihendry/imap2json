@@ -22,15 +22,13 @@ Cons:
 The id is bashed on the sha1sum of the first message in the conversation:
 
 	{
-	[ id: 3ae0abbf831db579a23212457dbfac8afd95e2d8,
-	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
+	[ id: 5048d370149a7a5d25dc17869cb1404cf747b6bb,
+	  mails: [{ header: ..., body:...}, { header: ..., body:...}, { header: ..., body:...}]
 	],
-	[ id: c7e7d24d6c944d3e518a44eacc3bbea8a1b78ffe,
-	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
+	[ id: ce8f6d7420633497ce0644860fafdb819bf133dd,
+	  mails: [{ header: ..., body:...}]
 	],
-	[ id: 84dd030a09654a4d187a4bb9396725b0b601cd67,
-	  mails: [{ header: ..., body:...},  { header: ..., body:...} { header: ..., body:...}]
-	],
+	}
 
 Pros:
 

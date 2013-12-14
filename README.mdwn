@@ -5,7 +5,7 @@ License: MIT
 Acknowledgements: Maxim Khitrov
 
 imap2json helps converts an email mailbox to a HTML [conversation
-view](https://en.wikipedia.org/wiki/Conversation_threading).
+view](https://en.wikipedia.org/wiki/Conversation_threading) (Organised by thread)
 
 Dependencies:
 
