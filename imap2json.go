@@ -4,6 +4,7 @@ import (
 	"./go-imap/go1/imap"
 	"bytes"
 	"crypto/sha1"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -200,6 +201,15 @@ func main() {
 	for _, v := range archive {
 		fmt.Println("Hash:", v.Id)
 		fmt.Println("Messages:", len(v.Msgs))
+	}
+
+	// Marshall to mail.json
+	json, _ := json.MarshalIndent(archive, "", " ")
+	err = ioutil.WriteFile("mail.json", json, 0644)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Wrote mail.json")
 	}
 
 }
