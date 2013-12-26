@@ -25,7 +25,11 @@ function main() {
 	} else {
 		$("#title").html('mail2json Index');
 		$.each(mailjson.THREAD, function(index, value) {
+			try {
 			$("#conversation").append("<li><strong><a href=#" + index + ">" + index + "</strong> " + value + " Subject: " + mailjson[value[0]].Header.Subject + "</a></li>");
+			} catch (e) {
+				console.log(value, e);
+			}
 		});
 	}
 }
