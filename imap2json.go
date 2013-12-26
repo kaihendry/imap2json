@@ -141,6 +141,11 @@ func main() {
 		c.Select("INBOX", true)
 	}
 
+	err = os.MkdirAll("cache", 0777)
+	if err != nil {
+		panic(err)
+	}
+
 	// Fetch everything TODO: Only fetch what's in THREAD but not in cache/
 	set, _ := imap.NewSeqSet("1:*")
 	cmd, _ = c.Fetch(set, "UID", "BODY[]")
