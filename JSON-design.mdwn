@@ -17,7 +17,7 @@ Cons:
 * Missing hash identifier of the thread, could be put in, but how?
 * Since not an array structure, it can't be mapped easily to a handlebars template
 
-## Array based structure (alternative proposal)
+## Array based structure CURRENT IMPLEMENTATION
 
 The id is bashed on the sha1sum of the first message in the conversation:
 

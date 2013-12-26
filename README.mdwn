@@ -51,7 +51,14 @@ This saves us from having to code this tricky part ourselves by tracking
 Message-ID: and References: / In-Reply-To:, which can be rather complex.
 
 IMAP also gives us a uniform interface at a URL, e.g.
-`imap://anonymous@imap.dabase.com` to generate an archive from.
+`imap://imap.dabase.com` to generate an archive from.
+
+No username implies anonymous login.
+
+	imap://user:password@example.com/SPAM
+
+Logs in as user using password, to the IMAP server an example.com. The mailbox
+SPAM is selected for archival.
 
 ### Raw dovecot output
 
