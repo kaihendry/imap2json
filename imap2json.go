@@ -25,6 +25,42 @@ func usage() {
 	os.Exit(2)
 }
 
+func dumplist(x interface{}) []int {
+
+	l := []int{}
+
+	switch t := x.(type) {
+
+	case []imap.Field:
+		for _, v := range t {
+			//fmt.Println(i)
+			l = append(l, dumplist(v)...)
+		}
+	case uint32:
+		l = append(l, int(t))
+	default:
+		fmt.Printf("Unhandled: %T\n", t)
+	}
+	return l
+}
+
+func dumpl(x interface{}) [][]int {
+
+	l := [][]int{}
+
+	switch t := x.(type) {
+
+	case []imap.Field:
+		for _, v := range t {
+			//fmt.Println(i)
+			l = append(l, dumplist(v))
+		}
+	default:
+		fmt.Printf("Unhandled: %T\n", t)
+	}
+	return l
+}
+
 func main() {
 
 	if len(os.Args) != 2 {
@@ -109,8 +145,19 @@ func main() {
 	}
 
 	// Export thread information
-	e2j["THREAD"] = rcmd.Data[0].Fields[1:]
+	flat := dumpl(rcmd.Data[0].Fields[1:])
+	fmt.Println("Flat:", flat)
+	for _, j := range flat {
+		for i, k := range j {
+			if i == 0 {
+				fmt.Println("SHA1SUM", k)
+			} else {
+				fmt.Println(i, k)
+			}
+		}
+	}
 
+	return
 	// Fetch everything
 	set, _ := imap.NewSeqSet("1:*")
 	cmd, _ = c.Fetch(set, "UID", "BODY[]")
