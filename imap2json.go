@@ -178,7 +178,7 @@ func main() {
 	}
 
 	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat)
+	fmt.Println("Flat:", flat) // BUG IS HERE
 
 	// Refer to Array based structure in JSON-design.mdwn
 
@@ -190,14 +190,22 @@ func main() {
 				s := fmt.Sprintf("cache/%d.txt", k)
 				entiremsg, err := ioutil.ReadFile(s)
 				if err != nil {
-					panic(err)
+					panic(err) // continue ?
 				}
 				h := sha1.New()
 				h.Write(entiremsg)
 				c.Id = fmt.Sprintf("%x", h.Sum(nil))
-				c.Msgs = append(c.Msgs, getMsg(k))
+				m, err := getMsg(k)
+				if err != nil {
+					m = Msg{Header: nil, Body: "Missing " + string(k)}
+				}
+				c.Msgs = append(c.Msgs, m)
 			} else {
-				c.Msgs = append(c.Msgs, getMsg(k))
+				m, err := getMsg(k)
+				if err != nil {
+					m = Msg{Header: nil, Body: "Missing " + string(k)}
+				}
+				c.Msgs = append(c.Msgs, m)
 			}
 		}
 		archive = append(archive, c)
@@ -219,18 +227,17 @@ func main() {
 
 }
 
-func getMsg(id int) Msg {
-	var m Msg
+func getMsg(id int) (m Msg, err error) {
 	s := fmt.Sprintf("cache/%d.txt", id)
 	entiremsg, err := ioutil.ReadFile(s)
 	if err != nil {
 		fmt.Println("Not fetched:", id)
-		panic(err)
+		return m, err
 	}
 	if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 		body, _ := ioutil.ReadAll(msg.Body)
 		m.Body = string(body)
 		m.Header = msg.Header
 	}
-	return m
+	return m, nil
 }
