@@ -11,7 +11,6 @@ import (
 	"net/mail"
 	"net/url"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -96,7 +95,7 @@ func main() {
 	}
 
 	// Temporary data structure that will be marshalled into JSON
-	e2j := map[string]interface{}{}
+	e2j := map[int]Msg{}
 
 	// Comment out to turn off debug info
 	imap.DefaultLogger = log.New(os.Stdout, "", 0)
@@ -144,20 +143,6 @@ func main() {
 		panic(err)
 	}
 
-	// Export thread information
-	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat)
-	for _, j := range flat {
-		for i, k := range j {
-			if i == 0 {
-				fmt.Println("SHA1SUM", k)
-			} else {
-				fmt.Println(i, k)
-			}
-		}
-	}
-
-	return
 	// Fetch everything
 	set, _ := imap.NewSeqSet("1:*")
 	cmd, _ = c.Fetch(set, "UID", "BODY[]")
@@ -173,13 +158,29 @@ func main() {
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 				body, _ := ioutil.ReadAll(msg.Body)
-				id := int64(m.UID)
-				e2j[strconv.FormatInt(id, 10)] = Msg{Header: msg.Header, Body: string(body)}
+				id := int(m.UID)
+				e2j[id] = Msg{Header: msg.Header, Body: string(body)}
 			}
 		}
 		cmd.Data = nil
-
 	}
+
+	fmt.Println(e2j)
+
+	// Export thread information
+	flat := dumpl(rcmd.Data[0].Fields[1:])
+	fmt.Println("Flat:", flat)
+	for _, j := range flat {
+		for i, k := range j {
+			if i == 0 {
+				fmt.Println("SHA1SUM", e2j[k])
+			} else {
+				fmt.Println(i, k)
+			}
+		}
+	}
+
+	return
 
 	// Marshall to mail.json
 	backtoj, _ := json.MarshalIndent(e2j, "", " ")
