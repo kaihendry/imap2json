@@ -3,7 +3,7 @@ package main
 import (
 	"./go-imap/go1/imap"
 	"bytes"
-	"encoding/json"
+	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -17,6 +17,11 @@ import (
 type Msg struct {
 	Header mail.Header
 	Body   string
+}
+
+type Conversation struct {
+	Id   string
+	Msgs []Msg
 }
 
 func usage() {
@@ -94,9 +99,6 @@ func main() {
 		panic(err)
 	}
 
-	// Temporary data structure that will be marshalled into JSON
-	e2j := map[int]Msg{}
-
 	// Comment out to turn off debug info
 	imap.DefaultLogger = log.New(os.Stdout, "", 0)
 	imap.DefaultLogMask = imap.LogConn | imap.LogRaw
@@ -138,12 +140,7 @@ func main() {
 		c.Select("INBOX", true)
 	}
 
-	rcmd, err := imap.Wait(c.Send("THREAD", "references UTF-8 all")) // Do we need UID option here?
-	if err != nil {
-		panic(err)
-	}
-
-	// Fetch everything
+	// Fetch everything TODO: Only fetch what's in THREAD but not in cache/
 	set, _ := imap.NewSeqSet("1:*")
 	cmd, _ = c.Fetch(set, "UID", "BODY[]")
 
@@ -157,38 +154,68 @@ func main() {
 			m := rsp.MessageInfo()
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
-				body, _ := ioutil.ReadAll(msg.Body)
 				id := int(m.UID)
-				e2j[id] = Msg{Header: msg.Header, Body: string(body)}
+				// Maybe should write this out as files
+				s := fmt.Sprintf("cache/%d.txt", id)
+				err := ioutil.WriteFile(s, entiremsg, 0644)
+				if err != nil {
+					panic(err)
+				}
 			}
 		}
 		cmd.Data = nil
 	}
 
-	fmt.Println(e2j)
-
-	// Export thread information
-	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat)
-	for _, j := range flat {
-		for i, k := range j {
-			if i == 0 {
-				fmt.Println("SHA1SUM", e2j[k])
-			} else {
-				fmt.Println(i, k)
-			}
-		}
-	}
-
-	return
-
-	// Marshall to mail.json
-	backtoj, _ := json.MarshalIndent(e2j, "", " ")
-	err = ioutil.WriteFile("mail.json", backtoj, 0644)
+	rcmd, err := imap.Wait(c.Send("THREAD", "references UTF-8 all")) // Do we need UID option here?
 	if err != nil {
 		panic(err)
-	} else {
-		fmt.Println("Wrote mail.json")
 	}
 
+	flat := dumpl(rcmd.Data[0].Fields[1:])
+	fmt.Println("Flat:", flat)
+
+	// Refer to Array based structure in JSON-design.mdwn
+
+	var archive []Conversation
+	for _, j := range flat {
+		var c Conversation
+		for i, k := range j {
+			if i == 0 {
+				s := fmt.Sprintf("cache/%d.txt", k)
+				entiremsg, err := ioutil.ReadFile(s)
+				if err != nil {
+					panic(err)
+				}
+				h := sha1.New()
+				h.Write(entiremsg)
+				c.Id = fmt.Sprintf("%x", h.Sum(nil))
+				c.Msgs = append(c.Msgs, getMsg(k))
+			} else {
+				c.Msgs = append(c.Msgs, getMsg(k))
+			}
+		}
+		archive = append(archive, c)
+	}
+	fmt.Println(archive)
+	for _, v := range archive {
+		fmt.Println("Hash:", v.Id)
+		fmt.Println("Messages:", len(v.Msgs))
+	}
+
+}
+
+func getMsg(id int) Msg {
+	var m Msg
+	s := fmt.Sprintf("cache/%d.txt", id)
+	entiremsg, err := ioutil.ReadFile(s)
+	if err != nil {
+		fmt.Println("Not fetched:", id)
+		panic(err)
+	}
+	if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
+		body, _ := ioutil.ReadAll(msg.Body)
+		m.Body = string(body)
+		m.Header = msg.Header
+	}
+	return m
 }
