@@ -158,11 +158,13 @@ func main() {
 		// Process message response into temporary data structure
 		for _, rsp = range cmd.Data {
 			m := rsp.MessageInfo()
+			fmt.Println("NOT THREAD ID", m.UID)
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 				id := int(m.UID)
 				// Maybe should write this out as files
 				s := fmt.Sprintf("cache/%d.txt", id)
+				fmt.Printf("Wrote cache/%d.txt", id)
 				err := ioutil.WriteFile(s, entiremsg, 0644)
 				if err != nil {
 					panic(err)
@@ -172,7 +174,7 @@ func main() {
 		cmd.Data = nil
 	}
 
-	rcmd, err := imap.Wait(c.Send("THREAD", "references UTF-8 all")) // Do we need UID option here?
+	rcmd, err := imap.Wait(c.Send("UID THREAD", "references UTF-8 all"))
 	if err != nil {
 		panic(err)
 	}

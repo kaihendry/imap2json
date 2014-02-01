@@ -1,18 +1,18 @@
 diff -r bf4993d7df21 go1/imap/command.go
 --- a/go1/imap/command.go	Wed Dec 04 07:54:09 2013 -0500
-+++ b/go1/imap/command.go	Wed Dec 11 10:04:22 2013 +0800
++++ b/go1/imap/command.go	Sat Feb 01 19:09:52 2014 +0800
 @@ -363,5 +363,8 @@
  
  		// RFC 5161
  		"ENABLE": &CommandConfig{States: all, Filter: LabelFilter("ENABLED")},
 +
 +		// RFC 5256
-+		"THREAD": &CommandConfig{States: all, Filter: NameFilter},
++		"UID THREAD": &CommandConfig{States: all, Filter: NameFilter},
  	}
  }
 diff -r bf4993d7df21 go1/imap/imap.go
 --- a/go1/imap/imap.go	Wed Dec 04 07:54:09 2013 -0500
-+++ b/go1/imap/imap.go	Wed Dec 11 10:04:22 2013 +0800
++++ b/go1/imap/imap.go	Sat Feb 01 19:09:52 2014 +0800
 @@ -194,6 +194,21 @@
  	return
  }
