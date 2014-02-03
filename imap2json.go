@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"github.com/jhillyerd/go.enmime"
 	"io/ioutil"
 	"log"
 	"net"
@@ -162,7 +163,6 @@ func main() {
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 				id := int(m.UID)
-				// Maybe should write this out as files
 				s := fmt.Sprintf("cache/%d.txt", id)
 				fmt.Printf("Wrote cache/%d.txt", id)
 				err := ioutil.WriteFile(s, entiremsg, 0644)
@@ -237,8 +237,19 @@ func getMsg(id int) (m Msg, err error) {
 		return m, err
 	}
 	if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
-		body, _ := ioutil.ReadAll(msg.Body)
-		m.Body = string(body)
+		if enmime.IsMultipartMessage(msg) {
+			mime, err := enmime.ParseMIMEBody(msg)
+			if err != nil {
+				//fmt.Println("Trying to read", id)
+				//panic(err)
+				m.Body = err.Error()
+			} else {
+				m.Body = mime.Text
+			}
+		} else {
+			body, _ := ioutil.ReadAll(msg.Body)
+			m.Body = string(body)
+		}
 		m.Header = msg.Header
 	}
 	return m, nil

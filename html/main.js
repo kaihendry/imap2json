@@ -19,7 +19,9 @@ function threadview(id) {
 		msg += '<span class="name"><span>' + value.Header.To + '</span>'
 		msg += '</span><br>';
 		msg += '<time class="time">' + value.Header.Date + '</time>';
-		msg += "<hr><pre>" + value.Body + "</pre></div>";
+		msg += "<hr><pre>";
+		msg += $("<pre/>").text(value.Body).html();
+        msg += "</pre></div>";
 		$("#conversation").append(msg);
 		console.log(index + ": " + value);
 	});
