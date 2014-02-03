@@ -1,6 +1,7 @@
 var mailjson = {};
 
 function threadview(id) {
+	id = id.split('-')[0]; // hash of first message - UID
 	for (i=0; i<mailjson.length; i++) {
 		if (mailjson[i].Id == id) {
 			break;
@@ -12,6 +13,7 @@ function threadview(id) {
 
 	$.each(mailjson[i].Msgs, function(index, value) {
 		msg = "<div class=mail>";
+		msg += '<a title="UID" id=' + id + '-' +  value.UID + ' class="uid">' + value.UID + '</a>'
 		msg += '<span class="from">';
 		msg += '<span class="name"><span>' + value.Header.From + '</span>'
 		msg += '</span>';

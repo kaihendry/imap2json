@@ -18,6 +18,7 @@ import (
 
 type Msg struct {
 	Header mail.Header
+	UID    int
 	Body   string
 }
 
@@ -250,6 +251,7 @@ func getMsg(id int) (m Msg, err error) {
 			body, _ := ioutil.ReadAll(msg.Body)
 			m.Body = string(body)
 		}
+		m.UID = id
 		m.Header = msg.Header
 	}
 	return m, nil
