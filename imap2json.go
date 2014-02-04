@@ -79,13 +79,9 @@ func main() {
 		usage()
 	}
 
-	if iurl.Scheme != "imap" {
+	if iurl.Scheme != "imaps" && iurl.Scheme != "imap" {
 		usage()
 	}
-
-	//fmt.Println(iurl.User)
-	//fmt.Println("Host:", iurl.Host)
-	//fmt.Println(iurl.Path)
 
 	var (
 		c   *imap.Client
@@ -106,12 +102,22 @@ func main() {
 	imap.DefaultLogger = log.New(os.Stdout, "", 0)
 	imap.DefaultLogMask = imap.LogConn | imap.LogRaw
 
-	c, _ = imap.Dial(iurl.Host)
+	if iurl.Scheme == "imaps" {
+		fmt.Println("Making a secure connection to", iurl.Host)
+		c, err = imap.DialTLS(iurl.Host, nil)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 
+	} else { // It's just imap
+		c, _ = imap.Dial(iurl.Host)
+	}
+
+	// Logout once done
 	defer func() { c.Logout(30 * time.Second) }()
 
-	// Not sure why this has to be nulled
-	c.Data = nil
+	//fmt.Println("Server says hello:", c.Data[0].Info)
+	//c.Data = nil
 
 	if iurl.User == nil {
 		fmt.Println("Logging in Anonymously...")
@@ -121,8 +127,7 @@ func main() {
 		if c.State() == imap.Login {
 			user := iurl.User.Username()
 			pass, _ := iurl.User.Password()
-			fmt.Println("Logging in as user:", user)
-			_, err = c.Login(user, pass)
+			c.Login(user, pass)
 		} else {
 			fmt.Printf("Login not presented")
 			return
@@ -181,7 +186,7 @@ func main() {
 	}
 
 	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat) // BUG IS HERE
+	fmt.Println("Flat:", flat)
 
 	// Refer to Array based structure in JSON-design.mdwn
 
