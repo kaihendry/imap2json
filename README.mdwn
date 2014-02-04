@@ -4,6 +4,8 @@ License: MIT
 
 Acknowledgements: Maxim Khitrov
 
+### WARNING: DOES NOT WORK WITH GMAIL IMAPD SINCE IT DOES NOT IMPLEMENT THE STANDARD RFC5256
+
 imap2json helps converts an email mailbox to a HTML [conversation
 view](https://en.wikipedia.org/wiki/Conversation_threading) (Organised by thread)
 
@@ -29,7 +31,7 @@ Example usage:
 
 1. hg clone https://code.google.com/p/go-imap/
 *  cd go-imap
-*  patch -p1 < ../go-imap.diff # To add THREAD support & Anonymous login
+*  patch -p1 < ../go-imap.diff # To add UID THREAD support & Anonymous login
 *  cd ..
 *  go run imap2json.go # imap URL argument will be supported in future
 
@@ -60,11 +62,15 @@ No username implies anonymous login.
 Logs in as user using password, to the IMAP server an example.com. The mailbox
 SPAM is selected for archival.
 
+For Fastmail, a folder "foo" is prefixed with INBOX.
+
+	go run imap2json.go imaps://test1234@speedpost.net:secret@mail.messagingengine.com/Inbox.foo
+
 ### Raw dovecot output
 
 On a local [dovecot](https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/dovecot) instance using [Maildir](Maildir/) and [minimal Dovecot configuration](dovecot.conf):
 
-	printf "1 select inbox\n2 thread references us-ascii all\n3 fetch 1:* envelope\n4 logout\n" |
+	printf "1 select inbox\n2 UID THREAD references us-ascii all\n3 fetch 1:* envelope\n4 logout\n" |
 	/usr/lib/dovecot/imap
 
 Produces the reply from Dovecot.
@@ -94,7 +100,7 @@ Or using netcat with [our read only test IMAP service](http://dabase.com/e/16001
 	nc imap.dabase.com imap << EOF
 	1 authenticate anonymous foobar
 	2 select inbox
-	3 thread references UTF-8 all
+	3 UID THREAD references UTF-8 all
 	4 fetch 1:* envelope
 	5 logout
 	EOF
