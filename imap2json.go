@@ -148,6 +148,16 @@ func main() {
 		c.Select("INBOX", true)
 	}
 
+	rcmd, err := imap.Wait(c.Send("UID THREAD", "references UTF-8 all"))
+	if err != nil {
+		fmt.Println("Your IMAPD server", iurl.Host, "sadly does not support UID THREAD (rfc5256)")
+		fmt.Println("Please consider exporting your email and serving it via http://dovecot.org/ IMAPD")
+		panic(err)
+	}
+
+	flat := dumpl(rcmd.Data[0].Fields[1:])
+	fmt.Println("Flat:", flat)
+
 	err = os.MkdirAll("cache", 0777)
 	if err != nil {
 		panic(err)
@@ -179,14 +189,6 @@ func main() {
 		}
 		cmd.Data = nil
 	}
-
-	rcmd, err := imap.Wait(c.Send("UID THREAD", "references UTF-8 all"))
-	if err != nil {
-		panic(err)
-	}
-
-	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat)
 
 	// Refer to Array based structure in JSON-design.mdwn
 
