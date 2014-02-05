@@ -31,7 +31,12 @@ type Conversation struct {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s imap://imap.dabase.com\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "Usage examples:\t%s imap://imap.dabase.com # Anonymous login\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\t\t%s imap://user:password@imap.example.com\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\t\t%s imaps://test1234@fastmail.fm:secret@mail.messagingengine.com/Inbox.foo # Selecting the foo folder\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\nYou can put the machine's password in your %s\n\n", os.Getenv("HOME")+"/.netrc")
+
+	flag.PrintDefaults()
 	os.Exit(2)
 }
 
@@ -75,6 +80,7 @@ func dumpl(x interface{}) [][]int {
 func main() {
 
 	verbose := flag.Bool("v", false, "verbose")
+	flag.Usage = usage
 
 	flag.Parse()
 
