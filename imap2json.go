@@ -1,10 +1,11 @@
 package main
 
 import (
-	"./go-imap/go1/imap"
+	"./go-imap/go1/imap" // local patched copy
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/jhillyerd/go.enmime"
 	"io/ioutil"
@@ -20,7 +21,7 @@ import (
 type Msg struct {
 	Header mail.Header
 	UID    int
-	Body   string
+	Body   string // Plain utf8 text
 }
 
 type Conversation struct {
@@ -33,6 +34,7 @@ func usage() {
 	os.Exit(2)
 }
 
+// Functions for collapsing a THREAD data structure into conversations
 func dumplist(x interface{}) []int {
 
 	l := []int{}
@@ -71,11 +73,15 @@ func dumpl(x interface{}) [][]int {
 
 func main() {
 
-	if len(os.Args) != 2 {
+	verbose := flag.Bool("v", false, "verbose")
+
+	flag.Parse()
+
+	if flag.NArg() != 1 {
 		usage()
 	}
 
-	iurl, err := url.ParseRequestURI(os.Args[1])
+	iurl, err := url.ParseRequestURI(flag.Arg(0))
 	if err != nil {
 		usage()
 	}
@@ -94,14 +100,17 @@ func main() {
 	tc, err := net.Dial("tcp", iurl.Host+":"+iurl.Scheme)
 	if err == nil {
 		tc.Close()
-		fmt.Printf("Dial to %s succeeded\n", iurl.Host)
+		if *verbose {
+			fmt.Printf("Dial to %s succeeded\n", iurl.Host)
+		}
 	} else {
 		panic(err)
 	}
 
-	// Comment out to turn off debug info
-	imap.DefaultLogger = log.New(os.Stdout, "", 0)
-	imap.DefaultLogMask = imap.LogConn | imap.LogRaw
+	if *verbose {
+		imap.DefaultLogger = log.New(os.Stdout, "", 0)
+		imap.DefaultLogMask = imap.LogConn | imap.LogRaw
+	}
 
 	if iurl.Scheme == "imaps" {
 		fmt.Println("Making a secure connection to", iurl.Host)
@@ -157,7 +166,7 @@ func main() {
 	}
 
 	flat := dumpl(rcmd.Data[0].Fields[1:])
-	fmt.Println("Flat:", flat)
+	// fmt.Println("Flat:", flat)
 
 	err = os.MkdirAll("cache", 0777)
 	if err != nil {
@@ -235,7 +244,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Built mail.json\n")
+		fmt.Println("Built mail.json! Noticed a bug? https://github.com/kaihendry/imap2json/issues\n")
 	}
 
 }
@@ -263,7 +272,7 @@ func getMsg(id int) (m Msg, err error) {
 		}
 		m.UID = id
 
-		// Trying to prune headers we don't need to keep mail.json size down
+		// Pruning headers we don't need to keep mail.json size down
 		delete(msg.Header, "Content-Disposition")
 		delete(msg.Header, "Content-Transfer-Encoding")
 		delete(msg.Header, "Content-Type")
