@@ -13,6 +13,7 @@ import (
 	"net/mail"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -175,12 +176,12 @@ func main() {
 		// Process message response into temporary data structure
 		for _, rsp = range cmd.Data {
 			m := rsp.MessageInfo()
-			fmt.Println("NOT THREAD ID", m.UID)
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 				id := int(m.UID)
 				s := fmt.Sprintf("cache/%d.txt", id)
-				fmt.Printf("Wrote cache/%d.txt", id)
+				// Writing out message ids to cache
+				// fmt.Printf("WROTE: %d\n", id)
 				err := ioutil.WriteFile(s, entiremsg, 0644)
 				if err != nil {
 					panic(err)
@@ -196,7 +197,7 @@ func main() {
 	for _, j := range flat {
 		var c Conversation
 		for i, k := range j {
-			if i == 0 {
+			if i == 0 { // First message gets hashed
 				s := fmt.Sprintf("cache/%d.txt", k)
 				entiremsg, err := ioutil.ReadFile(s)
 				if err != nil {
@@ -210,7 +211,7 @@ func main() {
 					m = Msg{Header: nil, Body: "Missing " + string(k)}
 				}
 				c.Msgs = append(c.Msgs, m)
-			} else {
+			} else { // Subsequent messages in the conversation
 				m, err := getMsg(k)
 				if err != nil {
 					m = Msg{Header: nil, Body: "Missing " + string(k)}
@@ -220,11 +221,13 @@ func main() {
 		}
 		archive = append(archive, c)
 	}
-	fmt.Println(archive)
-	for _, v := range archive {
-		fmt.Println("Hash:", v.Id)
-		fmt.Println("Messages:", len(v.Msgs))
-	}
+
+	// DEBUG CRUFT
+	// fmt.Println(archive)
+	// for _, v := range archive {
+	// fmt.Println("Hash:", v.Id)
+	// fmt.Println("Messages:", len(v.Msgs))
+	// }
 
 	// Marshall to mail.json
 	json, _ := json.MarshalIndent(archive, "", " ")
@@ -232,7 +235,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Wrote mail.json")
+		fmt.Println("Built mail.json\n")
 	}
 
 }
@@ -259,6 +262,45 @@ func getMsg(id int) (m Msg, err error) {
 			m.Body = string(body)
 		}
 		m.UID = id
+
+		// Trying to prune headers we don't need to keep mail.json size down
+		delete(msg.Header, "Content-Disposition")
+		delete(msg.Header, "Content-Transfer-Encoding")
+		delete(msg.Header, "Content-Type")
+		delete(msg.Header, "Delivered-To")
+		delete(msg.Header, "Dkim-Signature")
+		delete(msg.Header, "In-Reply-To")
+		delete(msg.Header, "List-Archive")
+		delete(msg.Header, "List-Help")
+		delete(msg.Header, "List-Id")
+		delete(msg.Header, "List-Post")
+		delete(msg.Header, "List-Subscribe")
+		delete(msg.Header, "List-Unsubscribe")
+		delete(msg.Header, "Message-Id")
+		delete(msg.Header, "Mime-Version")
+		delete(msg.Header, "Precedence")
+		delete(msg.Header, "Received")
+		delete(msg.Header, "References")
+		delete(msg.Header, "Reply-To")
+		delete(msg.Header, "Resent-Cc")
+		delete(msg.Header, "Resent-Date")
+		delete(msg.Header, "Resent-From")
+		delete(msg.Header, "Resent-Message-Id")
+		delete(msg.Header, "Resent-To")
+		delete(msg.Header, "Return-Path")
+		delete(msg.Header, "Sender")
+		delete(msg.Header, "Thread-Index")
+		delete(msg.Header, "Thread-Topic")
+		delete(msg.Header, "User-Agent")
+		delete(msg.Header, "Resent-Sender")
+		delete(msg.Header, "Accept-Language")
+		delete(msg.Header, "Content-Language")
+		delete(msg.Header, "Errors-To")
+		for key := range msg.Header {
+			if strings.HasPrefix(key, "X-") {
+				delete(msg.Header, key)
+			}
+		}
 		m.Header = msg.Header
 	}
 	return m, nil
