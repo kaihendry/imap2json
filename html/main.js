@@ -1,13 +1,22 @@
 var mailjson = {};
 
 function threadview(id) {
-	id = id.split('-')[0]; // hash of first message - UID
+	// console.log(id);
+	var arg = id.split('-'); // hash of first message - UID
+	id = arg[0];
+	//console.log(id);
+	if (! parseInt(arg[1]) > 0) { window.scrollTo(0,0);}
 	for (i=0; i<mailjson.length; i++) {
-		if (mailjson[i].Id == id) {
+		// console.log(id);
+		if (mailjson[i].Id.indexOf(id) == 0) {
 			break;
 		}
 	}
-	console.log("Found ", id, " at ", i);
+
+	// console.log(i);
+	if (typeof mailjson[i] === 'undefined') { $('#title').html("Thread not found."); return; }
+
+	// console.log("Found ", id, " at ", i);
 
 	$('#title').html(mailjson[i].Msgs[0].Header.Subject);
 
@@ -25,7 +34,7 @@ function threadview(id) {
 		msg += $("<pre/>").text(value.Body).html();
         msg += "</pre></div>";
 		$("#conversation").append(msg);
-		console.log(index + ": " + value);
+		// console.log(index + ": " + value);
 	});
 }
 
@@ -36,7 +45,7 @@ function main() {
 	} else {
 		$("#title").html('mail2json Index');
 		$.each(mailjson, function(index, value) {
-			console.log(value.Id)
+			// console.log(value.Id)
 			try {
 			$("#conversation").append("<li><strong><a href=#" + value.Id + ">" + value.Id + "</strong> " + value.Msgs.length + " Subject: " + value.Msgs[0].Header.Subject + "</a></li>");
 			} catch (e) {
