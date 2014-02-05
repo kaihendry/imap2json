@@ -165,7 +165,7 @@ func main() {
 		}
 	}
 
-	if iurl.Path != "" {
+	if iurl.Path != "" { // Has user asked us to grab a particular folder/mailbox?
 		// Remove / prefix
 		mailbox := iurl.Path[1:]
 		fmt.Println("Selecting mailbox:", mailbox)
@@ -181,6 +181,7 @@ func main() {
 		panic(err)
 	}
 
+	// Flatten thread tree stucture
 	flat := dumpl(rcmd.Data[0].Fields[1:])
 	// fmt.Println("Flat:", flat)
 
@@ -246,13 +247,6 @@ func main() {
 		}
 		archive = append(archive, c)
 	}
-
-	// DEBUG CRUFT
-	// fmt.Println(archive)
-	// for _, v := range archive {
-	// fmt.Println("Hash:", v.Id)
-	// fmt.Println("Messages:", len(v.Msgs))
-	// }
 
 	// Marshall to mail.json
 	json, _ := json.MarshalIndent(archive, "", " ")
