@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./go-imap/go1/imap" // local patched copy
+	"github.com/kaihendry/go-imap/go1/imap"
 	"bytes"
 	"code.google.com/p/go-netrc/netrc"
 	"crypto/sha1"
