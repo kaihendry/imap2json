@@ -58,7 +58,12 @@ function main() {
 			// console.log(value.Id)
 			try {
 				var c = "<li><a href=#" ;
-				c += value.Id + "><span class='threadlength'>" + value.Msgs.length;
+				c += value.Id + ">";
+				if (value.Msgs.length == 1) {
+					c += "<span class='thread1'>1</span>";
+				} else {
+					c += "<span class='threadconv'>" + value.Msgs.length + "</span>";
+				}
 				c += "</span> <time>" + value.Msgs[0].Header.Date + "</time>&nbsp;<strong>" +value.Msgs[0].Header.Subject + "</strong></a></li>";
 				$("#conversation").append(c);
 			} catch(e) {
