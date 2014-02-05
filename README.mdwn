@@ -34,7 +34,8 @@ Example usage, assuming you have a local Dovecot IMAPD running:
 *  cd go-imap
 *  patch -p1 < ../go-imap.diff # To add UID THREAD support & Anonymous login
 *  cd ..
-*  go get github.com/jhillyerd/go.enmime
+*  go get github.com/jhillyerd/go.enmime # library to help convert multipart emails to text
+*  go get code.google.com/p/go-netrc/netrc # to parse netrc, a place keep your imapd password
 *  go build imap2json.go
 *  ./imap2json imap://imap.dabase.com
 
