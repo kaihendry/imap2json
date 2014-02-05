@@ -3,6 +3,7 @@ package main
 import (
 	"./go-imap/go1/imap" // local patched copy
 	"bytes"
+	"code.google.com/p/go-netrc/netrc"
 	"crypto/sha1"
 	"encoding/json"
 	"flag"
@@ -137,6 +138,15 @@ func main() {
 		if c.State() == imap.Login {
 			user := iurl.User.Username()
 			pass, _ := iurl.User.Password()
+
+			n := os.Getenv("HOME") + "/.netrc"
+			m, err := netrc.FindMachine(n, iurl.Host)
+			if err == nil {
+				user = m.Login
+				pass = m.Password
+				fmt.Println("Using", user, "from", n)
+			}
+
 			c.Login(user, pass)
 		} else {
 			fmt.Printf("Login not presented")
@@ -244,7 +254,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Built mail.json! Noticed a bug? https://github.com/kaihendry/imap2json/issues\n")
+		fmt.Println("Built mail.json!\t\t\tNoticed a bug? https://github.com/kaihendry/imap2json/issues\n")
 	}
 
 }
