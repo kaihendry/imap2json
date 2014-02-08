@@ -258,6 +258,12 @@ func main() {
 		fmt.Println("Built mail.json!\t\t\tNoticed a bug? https://github.com/kaihendry/imap2json/issues\n")
 	}
 
+	index := "index.html"
+	if _, err := os.Stat(index); os.IsNotExist(err) {
+		fmt.Printf("No %s found, therefore creating %s\n", index, index)
+		ioutil.WriteFile(index, []byte(html), 0644)
+	}
+
 }
 
 func getMsg(id int) (m Msg, err error) {
