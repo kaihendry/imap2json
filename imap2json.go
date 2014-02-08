@@ -22,7 +22,6 @@ import (
 type Msg struct {
 	Header mail.Header
 	UID    int
-	RawUrl string
 	Body   string // Plain utf8 text
 }
 
@@ -288,7 +287,6 @@ func getMsg(id int) (m Msg, err error) {
 			m.Body = string(body)
 		}
 		m.UID = id
-		m.RawUrl = s
 
 		// Pruning headers we don't need to keep mail.json size down
 		delete(msg.Header, "Content-Disposition")
