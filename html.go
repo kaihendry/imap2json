@@ -35,6 +35,7 @@ function threadview(id) {
 	//console.log(id);
 	if (!parseInt(arg[1]) > 0) {
 		window.scrollTo(0, 0);
+		console.log("Scrolling to top");
 	}
 	for (i = 0; i < mailjson.length; i++) {
 		// console.log(id);
@@ -57,7 +58,7 @@ function threadview(id) {
 
 	$.each(mailjson[i].Msgs, function(index, value) {
 		msg = "<div class=mail>";
-		msg += '<a title="UID" id=' + id + '-' + value.UID + ' class="uid">' + value.UID + '</a>'
+		msg += '<a title="UID" id=' + id + '-' + value.UID + ' href=#' + id + '-' + value.UID + ' class="uid">' + value.UID + '</a>';
 		msg += '<span class="from">';
 		msg += '<span class="name"><span>' + value.Header.From + '</span>'
 		msg += '</span>';
@@ -65,6 +66,7 @@ function threadview(id) {
 		msg += '<span class="name"><span>' + value.Header.To + '</span>'
 		msg += '</span><br>';
 		msg += '<time class="time">' + value.Header.Date + '</time>';
+		msg += ' <span><a title="A url to download the original RFC8222 message from" href=raw/' + value.UID + '.txt>rawUrl</a></span>';
 		msg += "<hr><pre>";
 		msg += $("<pre/>").text(value.Body).html();
 		msg += "</pre></div>";
