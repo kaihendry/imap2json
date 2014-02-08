@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/kaihendry/go-imap/go1/imap"
 	"bytes"
 	"code.google.com/p/go-netrc/netrc"
 	"crypto/sha1"
@@ -9,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/jhillyerd/go.enmime"
+	"github.com/kaihendry/go-imap/go1/imap"
 	"io/ioutil"
 	"log"
 	"net"
@@ -22,6 +22,7 @@ import (
 type Msg struct {
 	Header mail.Header
 	UID    int
+	RawUrl string
 	Body   string // Plain utf8 text
 }
 
@@ -185,12 +186,12 @@ func main() {
 	flat := dumpl(rcmd.Data[0].Fields[1:])
 	// fmt.Println("Flat:", flat)
 
-	err = os.MkdirAll("cache", 0777)
+	err = os.MkdirAll("raw", 0777)
 	if err != nil {
 		panic(err)
 	}
 
-	// Fetch everything TODO: Only fetch what's in THREAD but not in cache/
+	// Fetch everything TODO: Only fetch what's in THREAD but not in raw/
 	set, _ := imap.NewSeqSet("1:*")
 	cmd, _ = c.Fetch(set, "UID", "BODY[]")
 
@@ -205,8 +206,8 @@ func main() {
 			entiremsg := imap.AsBytes(m.Attrs["BODY[]"])
 			if msg, _ := mail.ReadMessage(bytes.NewReader(entiremsg)); msg != nil {
 				id := int(m.UID)
-				s := fmt.Sprintf("cache/%d.txt", id)
-				// Writing out message ids to cache
+				s := fmt.Sprintf("raw/%d.txt", id)
+				// Writing out message ids to raw
 				// fmt.Printf("WROTE: %d\n", id)
 				err := ioutil.WriteFile(s, entiremsg, 0644)
 				if err != nil {
@@ -224,7 +225,7 @@ func main() {
 		var c Conversation
 		for i, k := range j {
 			if i == 0 { // First message gets hashed
-				s := fmt.Sprintf("cache/%d.txt", k)
+				s := fmt.Sprintf("raw/%d.txt", k)
 				entiremsg, err := ioutil.ReadFile(s)
 				if err != nil {
 					panic(err) // continue ?
@@ -260,7 +261,7 @@ func main() {
 }
 
 func getMsg(id int) (m Msg, err error) {
-	s := fmt.Sprintf("cache/%d.txt", id)
+	s := fmt.Sprintf("raw/%d.txt", id)
 	entiremsg, err := ioutil.ReadFile(s)
 	if err != nil {
 		fmt.Println("Not fetched:", id)
@@ -281,6 +282,7 @@ func getMsg(id int) (m Msg, err error) {
 			m.Body = string(body)
 		}
 		m.UID = id
+		m.RawUrl = s
 
 		// Pruning headers we don't need to keep mail.json size down
 		delete(msg.Header, "Content-Disposition")
