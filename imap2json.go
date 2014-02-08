@@ -19,6 +19,8 @@ import (
 	"time"
 )
 
+const VERSION = "0.1"
+
 type Msg struct {
 	Header mail.Header
 	UID    int
@@ -31,10 +33,11 @@ type Conversation struct {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "Usage examples:\t%s imap://imap.dabase.com # Anonymous login\n", os.Args[0])
-	fmt.Fprintf(os.Stderr, "\t\t%s imap://user:password@imap.example.com\n", os.Args[0])
-	fmt.Fprintf(os.Stderr, "\t\t%s imaps://test1234@fastmail.fm:secret@mail.messagingengine.com/Inbox.foo # Selecting the foo folder\n", os.Args[0])
-	fmt.Fprintf(os.Stderr, "\nYou can put the machine's password in your %s\n\n", os.Getenv("HOME")+"/.netrc")
+	fmt.Fprintf(os.Stderr, "Usage examples:\n$ %s imap://imap.dabase.com # Anonymous login\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "$ %s imap://user:password@imap.example.com # Authenticated login\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "$ # Select the foo folder, like so:\n")
+	fmt.Fprintf(os.Stderr, "$ %s imaps://test1234@fastmail.fm:secret@mail.messagingengine.com/Inbox.foo\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\nYou can put the machine's password in your %s\n\n", os.Getenv("HOME")+"/.netrc, so it cannot be seen\nfrom the process name.\n\nHomepage: https://github.com/kaihendry/imap2json")
 
 	flag.PrintDefaults()
 	os.Exit(2)
@@ -78,6 +81,14 @@ func dumpl(x interface{}) [][]int {
 }
 
 func main() {
+
+	version := flag.Bool("version", false, "prints current version")
+	flag.Parse()
+	if *version {
+		fmt.Println(VERSION)
+		fmt.Fprintf(os.Stderr, "Upgrade: go get -u github.com/kaihendry/imap2json\n")
+		os.Exit(0)
+	}
 
 	verbose := flag.Bool("v", false, "verbose")
 	flag.Usage = usage
@@ -260,7 +271,7 @@ func main() {
 	index := "index.html"
 	if _, err := os.Stat(index); os.IsNotExist(err) {
 		fmt.Printf("No %s found, therefore creating %s\n", index, index)
-		ioutil.WriteFile(index, []byte(html), 0644)
+		ioutil.WriteFile(index, []byte(strings.Replace(html, "VERSION", VERSION, 1)), 0644)
 	}
 
 }
