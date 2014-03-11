@@ -292,6 +292,8 @@ func getMsg(id int) (m Msg, err error) {
 				m.Body = err.Error()
 			} else {
 				m.Body = mime.Text
+				// Bit unsure why m.Header.... does not work here, but msg.Header does
+				msg.Header["Subject"] = []string{mime.GetHeader("Subject")}
 			}
 		} else {
 			body, _ := ioutil.ReadAll(msg.Body)
