@@ -40,6 +40,7 @@ function threadview(id) {
 		msg += '</span><br>';
 		msg += '<time class="time">' + value.Header.Date + '</time>';
 		msg += ' <span><a title="A url to download the original RFC8222 message from" href=raw/' + value.UID + '.txt>rawUrl</a></span>';
+		msg += ' <span><a href=https://github.com/kaihendry/imap2json/issues>Notice an issue?</a></span>';
 		msg += "<hr><pre>";
 		msg += $("<pre/>").text(value.Body).html();
 		msg += "</pre></div>";
@@ -78,7 +79,7 @@ function main() {
 
 $(function() {
 	$.getJSON("mail.json").done(function(data) {
-		mailjson = data;
+		mailjson = data.reverse();
 		main();
 	});
 
