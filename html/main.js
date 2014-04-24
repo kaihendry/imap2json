@@ -56,8 +56,8 @@ function threadview(id) {
 		msg += '</dd>';
 		msg += '<dt>Time:</dt><dd><time class="time">' + value.Date + '</time></dd>';
 		msg += '</dl>';
-		msg += ' <span><a title="A url to download the original RFC8222 message from" href=raw/' + value.UID + '.txt>rawUrl</a></span>';
-		msg += ' <span><a href=https://github.com/kaihendry/imap2json/issues>Notice an issue?</a></span>';
+		msg += '<span><a title="A url to download the original RFC8222 message from" href=raw/' + value.UID + '.txt>rawUrl</a></span>&nbsp;';
+		msg += '<span><a href=https://github.com/kaihendry/imap2json/issues>Notice an issue?</a></span>';
 		msg += "<hr><pre>";
 		msg += $("<pre/>").text(value.Body).html();
 		msg += "</pre></div>";
@@ -85,8 +85,10 @@ function main() {
 				var c = "<a href=#" ;
 				c += value.Id + ">";
 				c += "<span class='count'>" + value.Count + "</span>";
-				for (var f in value.Msgs[0].Header.From) {
-				c += "<span class=from>" + value.Msgs[0].Header.From[f].Name + "</span>";
+				if (value.Msgs[0].Header.From[0].Name) {
+				c += "<span class=from>" + value.Msgs[0].Header.From[0].Name + "</span>";
+				} else {
+				c += "<span class=to>&lt;" + value.Msgs[0].Header.From[0].Address + "&gt;</span>";
 				}
 				//for (var f in value.Msgs[0].Header.To) {
 				//	if (value.Msgs[0].Header.To[f].Name) {

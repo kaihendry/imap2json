@@ -1,9 +1,26 @@
 body { font-family: sans-serif; margin: 10px auto; }
+#conversation a:nth-of-type(odd) { background-color: #99FF99; }
+#conversation { display: table; }
+span { margin: 0; display: table-cell;  }
+a { margin: 0; padding: 1em; display: table-row; text-decoration: none; }
+time { white-space: nowrap; }
 .mail { border: thick green solid; padding: 1em; margin: 1em; border-radius: 6px; }
-.uid { float: right; font-size: 1.5em;}
-li a:hover {color: white; background-color: black}
-li a:link {text-decoration: none;}
-li { list-style: none; padding: 1em;}
-.to { color: red }
-.from { color: green; }
-.count { padding: 1em; border: thin solid black; border-radius:25px; }
+.count {
+	display: inline-block;
+	min-width: 10px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	line-height: 1;
+	vertical-align: baseline;
+	white-space: nowrap;
+	text-align: center;
+	background-color: #999;
+	border-radius: 10px;
+}
+
+a, a:visited, a:hover, a:active {
+	  color: inherit;
+}
+
