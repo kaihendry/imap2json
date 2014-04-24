@@ -6,10 +6,14 @@ function threadview(id) {
 	var arg = id.split('-'); // hash of first message - UID
 	id = arg[0];
 	//console.log(id);
+
+	// I have no idea why I wrote this
 	if (!parseInt(arg[1]) > 0) {
 		window.scrollTo(0, 0);
 		console.log("Scrolling to top");
 	}
+
+
 	for (i = 0; i < mailjson.length; i++) {
 		// console.log(id);
 		if (mailjson[i].Id.indexOf(id) == 0) {
@@ -18,7 +22,7 @@ function threadview(id) {
 	}
 	console.timeEnd('Finding thread');
 
-	// console.log(i);
+	// console.log(mailjson[i].Id);
 	if (typeof mailjson[i] === 'undefined') {
 		$('#title').html("Thread not found.");
 		return;
@@ -29,16 +33,29 @@ function threadview(id) {
 
 	console.time('Rendering thread');
 
-	$.each(mailjson[i].Msgs, function(index, value) {
+	$.getJSON("c/" + mailjson[i].Id + ".json", function( data ) {
+		// console.log(data);
+
+
+	$.each(data.Msgs, function(index, value) {
+		// console.log(value);
 		msg = "<div class=mail>";
+		// TODO make permalinks to individual messages work
 		msg += '<a title="UID" id=' + id + '-' + value.UID + ' href=#' + id + '-' + value.UID + ' class="uid">' + value.UID + '</a>';
-		msg += '<span class="from">';
-		msg += '<span class="name"><span>' + value.Header.From + '</span>'
-		msg += '</span>';
-		msg += '<span class="to">to ';
-		msg += '<span class="name"><span>' + value.Header.To + '</span>'
-		msg += '</span><br>';
-		msg += '<time class="time">' + value.Header.Date + '</time>';
+
+		msg += '<dl>';
+		msg += '<dt>From:</dt><dd>';
+		for (f in value.Header.From) {
+			msg += '<strong>' + value.Header.From[f].Name + '</strong>&lt;' + value.Header.From[f].Address + '&gt;';
+		}
+		msg += '</dd>';
+		msg += '<dt>To:</dt><dd>';
+		for (f in value.Header.To) {
+			msg += '<strong>' + value.Header.To[f].Name + '</strong>&lt;' + value.Header.To[f].Address + '&gt;';
+		}
+		msg += '</dd>';
+		msg += '<dt>Time:</dt><dd><time class="time">' + value.Date + '</time></dd>';
+		msg += '</dl>';
 		msg += ' <span><a title="A url to download the original RFC8222 message from" href=raw/' + value.UID + '.txt>rawUrl</a></span>';
 		msg += "<hr><pre>";
 		msg += $("<pre/>").text(value.Body).html();
@@ -47,6 +64,11 @@ function threadview(id) {
 		console.timeEnd('Rendering thread');
 		// console.log(index + ": " + value);
 	});
+
+
+
+	});
+
 }
 
 function main() {
@@ -61,12 +83,21 @@ function main() {
 			try {
 				var c = "<li><a href=#" ;
 				c += value.Id + ">";
-				if (value.Msgs.length == 1) {
-					c += "<span class='thread1'>1</span>";
-				} else {
-					c += "<span class='threadconv'>" + value.Msgs.length + "</span>";
+				c += "<span class='count'>" + value.Count + "</span>";
+				for (var f in value.Msgs[0].Header.From) {
+				c += "<span class=from>" + value.Msgs[0].Header.From[f].Name + "</span>";
 				}
-				c += "</span> <time>" + value.Msgs[0].Header.Date + "</time>&nbsp;<strong>" +value.Msgs[0].Header.Subject + "</strong></a></li>";
+				for (var f in value.Msgs[0].Header.To) {
+					if (value.Msgs[0].Header.To[f].Name) {
+				c += "<span class=to>" + value.Msgs[0].Header.To[f].Name + "</span>";
+					} else {
+				c += "<span class=to>&lt;" + value.Msgs[0].Header.To[f].Address + "&gt;</span>";
+					}
+				}
+				c += "<strong>" +value.Msgs[0].Header.Subject + "</strong>";
+				c += "<time>" + value.Msgs[0].Date + "</time>";
+				c += '</a></li>'
+
 				$("#conversation").append(c);
 			} catch(e) {
 				console.log(value, e);

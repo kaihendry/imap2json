@@ -8,4 +8,4 @@ html.go: html/index.m4.html html/index.html html/jquery.js html/main.js html/sty
 	@echo -e "\n\`" >> $@
 
 clean:
-	rm -f html.go
+	rm -f html.go *.json

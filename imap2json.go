@@ -29,8 +29,9 @@ type Msg struct {
 }
 
 type Conversation struct {
-	Id   string
-	Msgs []Msg
+	Id    string
+	Count int
+	Msgs  []Msg
 }
 
 func usage() {
@@ -198,6 +199,11 @@ func main() {
 	// fmt.Println("Flat:", flat)
 
 	err = os.MkdirAll("raw", 0777)
+	err = os.MkdirAll("c", 0777)
+	if err != nil {
+		panic(err)
+	}
+	err = os.MkdirAll("c", 0777)
 	if err != nil {
 		panic(err)
 	}
@@ -245,7 +251,7 @@ func main() {
 				h.Write(entiremsg)
 				c.Id = fmt.Sprintf("%x", h.Sum(nil))
 				m, err := getMsg(k)
-				fmt.Println(m.Header)
+				// fmt.Println(m.Header)
 				if err != nil {
 					m = Msg{Header: nil, Body: "Missing " + string(k)}
 				}
@@ -258,16 +264,19 @@ func main() {
 				c.Msgs = append(c.Msgs, m)
 			}
 		}
+		c.Count = len(c.Msgs)
 		json, _ := json.MarshalIndent(c, "", " ")
-		s := fmt.Sprintf("%s.json", c.Id)
+		s := fmt.Sprintf("c/%s.json", c.Id)
 		err = ioutil.WriteFile(s, json, 0644)
 		if err != nil {
 			panic(err)
 		} else {
 			fmt.Printf("Wrote %s.json\n", c.Id)
 		}
-
-		archive = append(archive, Conversation{c.Id, []Msg{c.Msgs[0]}})
+		// For mail.json, we only need the first message for the index
+		prunebody := c.Msgs[0]
+		prunebody.Body = ""
+		archive = append(archive, Conversation{c.Id, c.Count, []Msg{prunebody}})
 
 	}
 
@@ -364,17 +373,18 @@ func getMsg(id int) (m Msg, err error) {
 		t, err := time.Parse(time.RFC1123Z, m.Date)
 
 		if err == nil {
+			fmt.Println("Before:", m.Date)
 			m.Date = t.Format(time.RFC3339)
+			fmt.Println("After:", m.Date)
+		} else {
+			fmt.Println("Didn't grok", m.Date)
 		}
+		//fmt.Println("After2:", m.Date)
 
 		for _, a := range []string{"To", "From", "CC"} {
 			addrs, err := msg.Header.AddressList(a)
 			if err != nil {
 				continue
-			}
-
-			for _, addr := range addrs {
-				log.Printf("N: %q A: %q\n", addr.Name, addr.Address)
 			}
 
 			m.Header[a] = addrs

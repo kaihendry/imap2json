@@ -1,6 +1,7 @@
 [
  {
   "Id": "5048d370149a7a5d25dc17869cb1404cf747b6bb",
+  "Count": 4,
   "Msgs": [
    {
     "Header": {
@@ -22,12 +23,13 @@
     },
     "UID": 1,
     "Date": "Tue, 3 Dec 2013 14:09:26 +0800",
-    "Body": "Dear Kai,\r\n\r\nMovie tonight?\r\n"
+    "Body": ""
    }
   ]
  },
  {
   "Id": "ce8f6d7420633497ce0644860fafdb819bf133dd",
+  "Count": 1,
   "Msgs": [
    {
     "Header": {
@@ -49,7 +51,7 @@
     },
     "UID": 5,
     "Date": "2013-12-03T14:12:50+08:00",
-    "Body": "Don't forget dentist appointment on Saturday morning at 10:30!\r\n"
+    "Body": ""
    }
   ]
  }
