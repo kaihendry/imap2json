@@ -1,8 +1,9 @@
 body { font-family: sans-serif; margin: 10px auto; }
-.mail { border: thick green solid; padding: 1em; display: inline-block; margin: 1em; border-radius: 6px; }
+.mail { border: thick green solid; padding: 1em; margin: 1em; border-radius: 6px; }
 .uid { float: right; font-size: 1.5em;}
 li a:hover {color: white; background-color: black}
 li a:link {text-decoration: none;}
-li { list-style: none; margin-left: 2.3em;}
-.thread1 { color: darkgreen }
-.threadconv { color: red }
+li { list-style: none; padding: 1em;}
+.to { color: red }
+.from { color: green; }
+.count { padding: 1em; border: thin solid black; border-radius:25px; }

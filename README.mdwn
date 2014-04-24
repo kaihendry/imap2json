@@ -163,3 +163,10 @@ So the "movie" conversation would be identified by `5048d370149a7a5d25dc17869cb1
 
 <http://imap2json.dabase.com/#5048d370149a7a5d25dc17869cb1404cf747b6bb> or rather
 some short, easily sharable version like: <http://imap2json.dabase.com/#5048d>
+
+# Other mail archive projects
+
+Mailman's [hellokitty](https://github.com/hyperkitty/hyperkitty) [demo](https://lists.stg.fedoraproject.org/archives/list/389-users@lists.fedoraproject.org/thread/VHZPYDAUDNAWTIOK3KNFEEXSC6QYZK7N/)
+
+
+* http://play.golang.org/p/kqroEKVxRD
