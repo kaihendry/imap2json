@@ -81,22 +81,22 @@ function main() {
 		$.each(mailjson, function(index, value) {
 			// console.log(value.Id)
 			try {
-				var c = "<li><a href=#" ;
+				var c = "<a href=#" ;
 				c += value.Id + ">";
 				c += "<span class='count'>" + value.Count + "</span>";
 				for (var f in value.Msgs[0].Header.From) {
 				c += "<span class=from>" + value.Msgs[0].Header.From[f].Name + "</span>";
 				}
-				for (var f in value.Msgs[0].Header.To) {
-					if (value.Msgs[0].Header.To[f].Name) {
-				c += "<span class=to>" + value.Msgs[0].Header.To[f].Name + "</span>";
-					} else {
-				c += "<span class=to>&lt;" + value.Msgs[0].Header.To[f].Address + "&gt;</span>";
-					}
-				}
-				c += "<strong>" +value.Msgs[0].Header.Subject + "</strong>";
-				c += "<time>" + value.Msgs[0].Date + "</time>";
-				c += '</a></li>'
+				//for (var f in value.Msgs[0].Header.To) {
+				//	if (value.Msgs[0].Header.To[f].Name) {
+				//c += "<span class=to>" + value.Msgs[0].Header.To[f].Name + "</span>";
+				//	} else {
+				//c += "<span class=to>&lt;" + value.Msgs[0].Header.To[f].Address + "&gt;</span>";
+				//	}
+				// }
+				c += "<span class=subject>" +value.Msgs[0].Header.Subject + "</span>";
+				c += "<span><time>" + value.Msgs[0].Date + "</time></span>";
+				c += '</a>'
 
 				$("#conversation").append(c);
 			} catch(e) {
