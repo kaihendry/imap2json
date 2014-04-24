@@ -19,11 +19,12 @@ import (
 	"time"
 )
 
-const VERSION = "0.1"
+const VERSION = "0.2"
 
 type Msg struct {
-	Header mail.Header
+	Header map[string]interface{}
 	UID    int
+	Date   string
 	Body   string // Plain utf8 text
 }
 
@@ -244,6 +245,7 @@ func main() {
 				h.Write(entiremsg)
 				c.Id = fmt.Sprintf("%x", h.Sum(nil))
 				m, err := getMsg(k)
+				fmt.Println(m.Header)
 				if err != nil {
 					m = Msg{Header: nil, Body: "Missing " + string(k)}
 				}
@@ -256,7 +258,17 @@ func main() {
 				c.Msgs = append(c.Msgs, m)
 			}
 		}
-		archive = append(archive, c)
+		json, _ := json.MarshalIndent(c, "", " ")
+		s := fmt.Sprintf("%s.json", c.Id)
+		err = ioutil.WriteFile(s, json, 0644)
+		if err != nil {
+			panic(err)
+		} else {
+			fmt.Printf("Wrote %s.json\n", c.Id)
+		}
+
+		archive = append(archive, Conversation{c.Id, []Msg{c.Msgs[0]}})
+
 	}
 
 	// Marshall to mail.json
@@ -292,7 +304,6 @@ func getMsg(id int) (m Msg, err error) {
 				m.Body = err.Error()
 			} else {
 				m.Body = mime.Text
-				// Bit unsure why m.Header.... does not work here, but msg.Header does
 				msg.Header["Subject"] = []string{mime.GetHeader("Subject")}
 			}
 		} else {
@@ -339,7 +350,36 @@ func getMsg(id int) (m Msg, err error) {
 				delete(msg.Header, key)
 			}
 		}
-		m.Header = msg.Header
+
+		m.Header = make(map[string]interface{})
+		// We need to map values on the interface explicitly
+		for k, v := range msg.Header {
+			if k == "Date" {
+				m.Date = v[0]
+			} else {
+				m.Header[k] = v
+			}
+		}
+
+		t, err := time.Parse(time.RFC1123Z, m.Date)
+
+		if err == nil {
+			m.Date = t.Format(time.RFC3339)
+		}
+
+		for _, a := range []string{"To", "From", "CC"} {
+			addrs, err := msg.Header.AddressList(a)
+			if err != nil {
+				continue
+			}
+
+			for _, addr := range addrs {
+				log.Printf("N: %q A: %q\n", addr.Name, addr.Address)
+			}
+
+			m.Header[a] = addrs
+		}
+
 	}
 	return m, nil
 }

@@ -167,3 +167,6 @@ some short, easily sharable version like: <http://imap2json.dabase.com/#5048d>
 # Other mail archive projects
 
 Mailman's [hellokitty](https://github.com/hyperkitty/hyperkitty) [demo](https://lists.stg.fedoraproject.org/archives/list/389-users@lists.fedoraproject.org/thread/VHZPYDAUDNAWTIOK3KNFEEXSC6QYZK7N/)
+
+
+* http://play.golang.org/p/kqroEKVxRD
