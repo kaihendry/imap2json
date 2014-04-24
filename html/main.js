@@ -77,7 +77,7 @@ function main() {
 		threadview(id);
 	} else {
 		console.time('Rendering index');
-		$("#title").html('mail2json Index');
+		$("#title").html('imap2json of ' + mailjson.length + " conversations");
 		$.each(mailjson, function(index, value) {
 			// console.log(value.Id)
 			try {
